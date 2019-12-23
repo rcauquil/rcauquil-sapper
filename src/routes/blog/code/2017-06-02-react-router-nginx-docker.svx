@@ -19,7 +19,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
 <PostContent>
 
-  *I wrote a post on how to [easily add https and multiple apps on a vps using Docker](blog/code/2017/05/29/easy-https-on-vps-with-docker/) and in my example I used a basic react hello-world app, but I recently had struggles with react-router using this set up.*
+  *I wrote a post on how to [easily add https and multiple apps on a vps using Docker](blog/code/2017-05-29-easy-https-on-vps-with-docker) and in my example I used a basic react hello-world app, but I recently had struggles with react-router using this set up.*
 
   If you are using like me create-react-app (a very convenient way to avoid conf files and focus only on react) and react-router, you won't have any issues in your localhost environment with the router and it will work as expected.
 

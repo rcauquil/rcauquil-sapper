@@ -22,13 +22,13 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
 <PostContent>
 
-  *I wrote a post on how to [Monitor your home temperature over the web](blog/code/2016/03/13/monitor-temperature-photon-ds18b20/) and it's very nice to be able to know it from your phone or your office, but when you are at home it's much more easier to read it on a screen ! In this example we will extend the previous one.*
+  *I wrote a post on how to [Monitor your home temperature over the web](blog/code/2016-03-13-monitor-temperature-photon-ds18b20) and it's very nice to be able to know it from your phone or your office, but when you are at home it's much more easier to read it on a screen ! In this example we will extend the previous one.*
 
   ## Requirements
 
   First of all you need :
 
-  - The exact same things than in my [previous post](blog/code/2016/03/13/monitor-temperature-photon-ds18b20/)
+  - The exact same things than in my [previous post](blog/code/2016-03-13-monitor-temperature-photon-ds18b20)
   - The [128x64px OLED screen](https://docs.particle.io/datasheets/photon-shields/#serial-oled-screen-0-96-quot-1-) from the Maker Kit
   - More jumper wires !
 

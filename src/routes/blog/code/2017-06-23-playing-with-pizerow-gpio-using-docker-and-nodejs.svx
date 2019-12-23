@@ -23,7 +23,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
 <PostContent>
 
-  *It's been a long time since my last post about electronics and how to [use the photon maker kit oled screen](blog/code/2016/03/26/photon-maker-kit-oled/) from Particle.io. In this post we'll see how to use raspberrypi's GPIO using Docker and nodejs.*
+  *It's been a long time since my last post about electronics and how to [use the photon maker kit oled screen](blog/code/2016-03-26-photon-maker-kit-oled) from Particle.io. In this post we'll see how to use raspberrypi's GPIO using Docker and nodejs.*
 
   ## Requirements
 
