@@ -1,0 +1,47 @@
+{
+  "name": "rcauquil",
+  "description": "rcauquil website",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "sapper dev --ext '.svelte .svx'",
+    "build": "sapper build",
+    "export": "sapper export --ext '.svelte .svx'"
+  },
+  "dependencies": {
+    "compression": "^1.7.1",
+    "polka": "next",
+    "sirv": "^0.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fullhuman/postcss-purgecss": "^1.3.0",
+    "@rollup/plugin-alias": "^2.2.0",
+    "@rollup/plugin-replace": "^2.2.0",
+    "autoprefixer": "^9.7.3",
+    "config": "^3.2.4",
+    "cssnano": "^4.1.10",
+    "fs": "0.0.1-security",
+    "mdsvex": "^0.4.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^7.0.25",
+    "postcss-import": "^12.0.1",
+    "postcss-purgecss": "^1.0.0",
+    "prismjs": "^1.17.1",
+    "rollup": "^1.12.0",
+    "rollup-plugin-babel": "^4.0.2",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-svelte": "^5.0.1",
+    "rollup-plugin-terser": "^4.0.4",
+    "sapper": "^0.27.0",
+    "svelte": "^3.0.0",
+    "svelte-preprocess-postcss": "^1.1.1",
+    "svelte-prism": "^1.0.4",
+    "tailwindcss": "^1.1.4"
+  }
+}

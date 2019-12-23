@@ -1,0 +1,22 @@
+.DS_Store
+*~
+*.log
+*.tmp
+*.tmp.*
+.sourcemaps/
+.sass-cache/
+.tmp/
+.versions/
+log.txt
+Thumbs.db
+npm-debug.log*
+.history/
+.firebase/
+
+/node_modules/
+/src/node_modules/
+yarn-error.log
+/cypress/screenshots/
+/__sapper__/
+.history/
+# config/

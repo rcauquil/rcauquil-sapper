@@ -1,0 +1,178 @@
+---
+title: Use the photon maker kit oled screen
+date: '2016-03-26'
+ogImage: /images/code/2016-03-26-breadboard.jpg
+category:
+  - code
+picto: fa-code
+tags:
+  - Electronic
+  - Photon
+  - Maker Kit
+  - Oled
+  - IoT
+---
+
+```js exec
+import PostHeader from 'src/components/post/PostHeader.svelte';
+import PostContent from 'src/components/post/PostContent.svelte';
+```
+
+<PostHeader data={_metadata} />
+
+<PostContent>
+
+  *I wrote a post on how to [Monitor your home temperature over the web](blog/code/2016/03/13/monitor-temperature-photon-ds18b20/) and it's very nice to be able to know it from your phone or your office, but when you are at home it's much more easier to read it on a screen ! In this example we will extend the previous one.*
+
+  ## Requirements
+
+  First of all you need :
+
+  - The exact same things than in my [previous post](blog/code/2016/03/13/monitor-temperature-photon-ds18b20/)
+  - The [128x64px OLED screen](https://docs.particle.io/datasheets/photon-shields/#serial-oled-screen-0-96-quot-1-) from the Maker Kit
+  - More jumper wires !
+
+  ## Schematics
+
+  ![fritzing schematics](blog/code/2016-03-26-breadboard.jpg "Breadboard")  
+  *Yes, that's pretty warm but it's summer time in Reunion Island and I do hate air con...*
+
+  **NB:** The only change before wiring the screen is to change the **D4** pin for the sensor to pin **D0**.
+
+  Here is the wiring for the screen : *(photon -> screen)*
+
+  - D5 -> RST
+  - D4 -> CS
+  - D3 -> DC
+  - 3v3 -> Vcc
+  - Gnd -> Gnd
+
+  For the last 2 pins on the screen (**D0** and **D1**) you will have to use the hardware **CLK** (serial clock) and **MOSI** (Master Output).
+  [On the photon](https://docs.particle.io/reference/firmware/photon/#spi) **CLK** is pin **A3** and **MOSI** is pin **A5**, so you will have to wire like this : *(photon -> screen)*
+
+  - A3 -> D0
+  - A5 -> D1
+
+  *In the examples I found, those two pins in the firmware are usually commented, but you will have to wire them to use your hardware for your screen to work.*
+
+
+  ## Firmware
+
+  ```c
+  // This #include statement was automatically added by the Particle IDE.
+  // This #include statement was automatically added by the Particle IDE.
+  #include "application.h"
+  #include "OneWire/OneWire.h"
+  #include "spark-dallas-temperature/spark-dallas-temperature.h"
+  #include "Adafruit_SSD1306/Adafruit_SSD1306.h"
+
+  // ---------------------
+  // TEMPS
+  // ---------------------
+  double tempC = 0;
+
+  // ---------------------
+  // SCREEN
+  // ---------------------
+  // use hardware SPI
+  #define OLED_DC     D3
+  #define OLED_CS     D4
+  #define OLED_RESET  D5
+  Adafruit_SSD1306 display(OLED_DC, OLED_RESET, OLED_CS);
+
+  #define NUMFLAKES 10
+  #define XPOS 0
+  #define YPOS 1
+  #define DELTAY 2
+
+  #define LOGO16_GLCD_HEIGHT 16
+  #define LOGO16_GLCD_WIDTH  16
+
+  #if (SSD1306_LCDHEIGHT != 64)
+    #error("Height incorrect, please fix Adafruit_SSD1306.h!");
+  #endif
+
+  // ---------------------
+  // ONEWIRE + DALLAS
+  // ---------------------
+  // Set oneWire bus to pin 4
+  #define ONE_WIRE_BUS 0
+  // Setup a oneWire instance to communicate with any OneWire devices
+  OneWire oneWire(ONE_WIRE_BUS);
+  // Pass the oneWire reference to Dallas Temperature.
+  DallasTemperature sensors(&oneWire);
+
+  void setup() {
+    // VARS
+    // ---------------------
+    Particle.variable("tempC", &tempC, DOUBLE);
+
+    // INIT Serial for terminal checking
+    // ---------------------
+    Serial.begin(9600);
+
+    // INIT Sensors
+    // ---------------------
+    Serial.println("Dallas Temperature IC Control Library Demo");
+    // Start up the library
+    sensors.begin();
+
+    // INIT Screen
+    // ---------------------
+    // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
+    display.begin(SSD1306_SWITCHCAPVCC);
+    // init done
+    display.display(); // show splashscreen
+    delay(1000);
+    display.clearDisplay();  // clears the screen and buffer
+  }
+
+  void loop() {
+    // ---------------------
+    // TIME
+    // ---------------------
+    Time.zone(+4);
+    Serial.println(Time.timeStr());
+
+    // ---------------------
+    // TEMPERATURE
+    // ---------------------
+    // call sensors.requestTemperatures() to issue a global temperature
+    // request to all devices on the bus
+    Serial.println(" Requesting temperatures...");
+    sensors.requestTemperatures(); // Send the command to get temperatures
+    Serial.println("DONE");
+
+    Serial.println("Temperature for Device 1 is: ");
+    tempC = sensors.getTempCByIndex(0);
+    Serial.println(tempC); // Why "byIndex"?
+    // You can have more than one IC on the same bus.
+    // 0 refers to the first IC on the wire
+
+    // ---------------------
+    // SCREEN
+    // ---------------------
+    // draw the temperature
+    display.setTextSize(3);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println(tempC);
+    display.display();
+
+    // ---------------------
+    // DELAY
+    // ---------------------
+    delay(10000);
+    display.clearDisplay(); // clears the screen and buffer
+  }
+  ```
+
+  **NB:** Don't forget to use *display.display();* to show your informations and *display.clearDisplay();* to clear the screen.
+
+
+  ## Conclusion
+
+  You can do a lot of things with this little screen ! Don't forget to try the demo file included in the **Adafruit_SSD1306**.   
+  I hope it will help some of you !
+
+</PostContent>

@@ -1,0 +1,213 @@
+---
+title: Playing with the pizeroW GPIO using Docker and nodejs
+date: '2017-06-23'
+
+ogImage: /images/code/2017-06-23-ogimage.jpg
+category:
+  - code
+picto: fa-code
+tags:
+  - Raspberrypi
+  - Docker
+  - Nodejs
+  - RPIO
+  - rsync
+---
+
+```js exec
+import PostHeader from 'src/components/post/PostHeader.svelte';
+import PostContent from 'src/components/post/PostContent.svelte';
+```
+
+<PostHeader data={_metadata} />
+
+<PostContent>
+
+  *It's been a long time since my last post about electronics and how to [use the photon maker kit oled screen](blog/code/2016/03/26/photon-maker-kit-oled/) from Particle.io. In this post we'll see how to use raspberrypi's GPIO using Docker and nodejs.*
+
+  ## Requirements
+
+  First of all you need :
+
+  - A raspberrypi zero W (with jumpers)
+  - A basic LED (green in my case)
+  - A resistor (220Ohm in my case)
+  - A breadboard
+  - Some jumper wires
+
+  ## Prerequisite
+
+  ### Setting up the pizeroW
+
+  This article will not cover how to setup your pizeroW because a lot of well written documentions already exist like the one bellow:
+
+  - [Getting started with the raspberry pi zero w without a monitor](https://www.losant.com/blog/getting-started-with-the-raspberry-pi-zero-w-without-a-monitor)
+
+  Once you're done, it's up to you to configure it as you like. In my case I added git, zsh, OhMyZsh etc...
+
+  ### Installing Docker
+
+  Connect to your pi and start the Docker installer:
+
+  ```bash
+  ssh pi@raspberrypi.local
+  ```
+
+  ```bash
+  curl -sSL get.docker.com | sh
+  ```
+
+  Then set Docker to auto-start (reboot your pi after it):
+
+  ```bash
+  sudo systemctl enable docker
+  ```
+
+  ### Enable Docker client
+
+  The Docker client can only be used by root or members of the docker group. Add pi to the docker group to avoid doing sudo each time you want to use docker.
+
+  ```bash
+  sudo usermod -aG docker pi
+  ```
+
+  ## What we want
+
+  In this post we will implement the **Blink an LED** example from [RPIO](https://www.npmjs.com/package/rpio) *(a high performance node.js addon which provides access to the Raspberry Pi GPIO interface)*.   
+  We also want to work in a **dev environment** that let us send our app files in a volume shared with the container *(our dependencies and files will use our container's instance of nodejs, npm etc.)*. Doing this, we will avoid the need to build and send a new image each time a change is made, which is usefull for dev process.
+
+  To achieve this, we will need to:
+
+  - Build a docker image on the pi that contains nodejs.
+  - Init our app folder *(dev machine)* and send it to the pi.
+  - Wiring up the pi.
+  - Running our container.
+  - Enjoy !
+
+  ### 1/ Docker image for arm
+
+  As the pizeroW is **running on arm**, we need to use images which we know are designed to work on arm. The Docker team maintains a number of experimental images under the prefix [arm32v6](https://hub.docker.com/r/arm32v6/). And as I said in my previous posts I like to work on alpine based image so we will use **arm32v6/alpine:3.6**.
+
+  > Those images only works on arm so don't forget to build or run it on your pi.
+
+  ```bash
+  FROM arm32v6/alpine:3.6
+
+  RUN mkdir -p /usr/src/app
+  WORKDIR /usr/src/app
+
+  RUN apk add --update --no-cache python build-base nodejs nodejs-npm
+
+  EXPOSE 8000
+  ```
+
+  This Dockerfile is quite simple, we create an app folder and set the workdir to it. We are adding **python** and **build-base** *(equivalent to **build-essential** on ubuntu)* because our app will use **rpio** to deal with the pi's GPIO, and it will need those packages in order to build it during **npm install**.
+
+  > In production we can get rid of those packages after npm install, that will make our final image very lightweight. In this example the dev image will be >200Mo and the prod image will be ~40Mo, I will cover the differences in an other post.
+
+  We are adding **nodejs** and **nodejs-npm** because **in the arm32v6/alpine:3.6 npm is not installed with nodejs**.
+
+  You can copy this Dockerfile to build the image directly on your pi or simply pull the one I made:
+
+  ```bash
+  docker pull rcauquil/armnode-alpine:3.6
+  ```
+
+  ### 2/ Init the app and send it to the pi
+
+  Simply clone the demo I made for this post on my [github account](https://github.com/rcauquil/armnode-demo), in the place you want on your dev machine.
+
+  ```bash
+  >git clone https://github.com/rcauquil/armnode-demo.git
+  ```
+
+  As we don't want all the files from the demo on our pi but only **package.json**, **index.js** and **server.js**, we will use **rsync** and its **--exclude-from** flag using the content of the **.rsyncignore**.
+
+  > I am using .rsyncignore but it could be foo.txt.
+
+  Just outside of the freshly cloned app, run the following command to send the folder to the pi *(rsync will create the directory on your pi if it doesn't exist yet, otherwise it will sync the files)*. The **~** tells rsync to send it to the home directory of your pi *(don't forget to change the following IP by your pi's IP)*.
+
+  > You will be asked for your pi's password during this step. I recommend you to use ssh authentication on your pi to avoid the need to type your pi's password each time you do an rsync.
+
+  ```bash
+  rsync -e ssh -avzP --exclude-from './armnode-demo/.rsyncignore' ./armnode-demo pi@192.168.1.82:~
+  ```
+
+  Then connect to your pi, your folder should be here !
+
+  ### 4/ Wiring up the pi
+
+  To properly connect the LED, you have to connect the **anode** *(the longer leg)* to the positive supply of the circuit and the **cathode** *(the shorter leg)* to the negative side of the power supply *(gnd)*.
+
+  > On this following schematic the cathode is on the left *(connected to one of the many gnd provided by the pi)* and the anode on the right *(connected to the P12 / GPIO18 following the Blink and LED example)*.
+
+  ![fritzing schematics](blog/code/2017-06-23-fritzing.jpg "Fritzing Schematics")
+
+  ### 5/ Running our container
+
+  > By default the module will use **/dev/gpiomem** when using simple GPIO access. To access this device, your user will need to be a member of the gpio group.
+
+  Connect to your pi and add your user to gpio group like we did for docker.
+
+  ```bash
+  sudo usermod -aG gpio pi
+  ```
+
+  > Every docker container are runned **unprivileged** by default *(meaning you don't have host privileges)* you will have to run it with **--privileged** flag or **--device** to let it access only a part of the host.
+
+  In our case we just want access to **/dev/gpiomem** so we will use **--device=/dev/gpiomem**.
+
+  In this example we will also run it in *interactive mode* so we will use the **-it** flag and **/bin/ash** to use the alpine shell.
+
+  We are using the **--rm** because we don't want to keep this container when it exits and we will use the image I made and stored on [my docker hub](https://hub.docker.com/r/rcauquil/armnode-alpine/) profile **rcauquil/armnode-alpine:3.6**.
+
+  ```bash
+  docker run -it --rm --device=/dev/gpiomem -v /home/pi/armnode-demo:/usr/src/app rcauquil/armnode-alpine:3.6 /bin/ash
+  ```
+
+  After the pull is done and the container is up and running, you should be in the workdir we have set previously in the Dockerfile. If you run **ls -l** to list what's inside your current location, you should see the same files present in your app folder on your dev machine as well as the one on your pi !
+
+  ### 6/ Enjoy !
+
+  Now it's time to install the app dependencies present in our package.json. In your container run the following command.
+
+  ```bash
+  npm install
+  ```
+
+  Once done we can run the app and enjoy the blinking LED !
+
+  ```bash
+  node index.js
+  ```
+
+  ## A bit further
+
+  > This part will just cover the implementation of a simple nodejs server. As it's not the purpose of this post, but it is just for fun and to test it.
+
+  We know how to blink an LED from a script but you can also run a nodejs server and take control over your GPIO from your browser or wherever you want using websocket, fetch etc...
+
+  In our previous container we didn't mind on which port it was running, but in order to access your pi's server from your browser you will need to specify on which ports it will run.
+
+  We added **EXPORT 8000** in our Dockerfile, meaning our container is exposed by default on this port, that's why we are running our server on the same port.
+
+  You now have two possibilities :
+
+  - Using **-P** flag and let Docker bind a random port to our exposed 8000 from the container.
+  - Using **-p 8000:8000** flag to bind the ports we want following **host**:**container** rule.
+
+  ```bash
+  docker run -it --rm --device=/dev/gpiomem -p 8000:8000 -v /home/pi/armnode-demo:/usr/src/app rcauquil/armnode-alpine:3.6 /bin/ash
+  ```
+
+  Once your container is up and running you can visit **\<your-pi-ip\>:\<port\>** on your browser to enjoy your server. In my case:
+
+  ```bash
+  http://192.168.1.82:8000
+  ```
+
+  ## Conclusion
+
+  We have seen how to use our pi's GPIO and run a server on it. Now it's up to you and to your imagination to make things as you want. I hope this post will help some of you to get started on raspberrypi using docker and nodejs !
+
+</PostContent>

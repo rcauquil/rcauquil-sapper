@@ -1,0 +1,108 @@
+---
+title: Using react-router with Nginx and Docker
+date: '2017-06-02'
+category:
+  - code
+picto: fa-code
+tags:
+  - React Router
+  - Docker
+  - nginx
+---
+
+```js exec
+import PostHeader from 'src/components/post/PostHeader.svelte';
+import PostContent from 'src/components/post/PostContent.svelte';
+```
+
+<PostHeader data={_metadata} />
+
+<PostContent>
+
+  *I wrote a post on how to [easily add https and multiple apps on a vps using Docker](blog/code/2017/05/29/easy-https-on-vps-with-docker/) and in my example I used a basic react hello-world app, but I recently had struggles with react-router using this set up.*
+
+  If you are using like me create-react-app (a very convenient way to avoid conf files and focus only on react) and react-router, you won't have any issues in your localhost environment with the router and it will work as expected.
+
+  But since I am serving the built app on my server using a Docker nginx image, it will overide the behavior of react-router.
+
+  You can still use your links to navigate through your app but if you want to load a specific url or reload the current page you will get an error because nginx wont be able to find your content.
+
+  The recommended solution is to use **try_files** in your nginx configuration, that will serve **index.html** each time a user request is made.
+
+  ```bash
+  try_files $uri $uri/ /index.html;
+  ```
+
+  ## Change nginx default.conf
+
+  In order to have the previous line working you will have to change your nginx default.conf file at build time because we don't have direct access to the nginx command within the container.
+
+  ### Side note
+
+  Nginx can be controlled by signals and Docker provides kill command for sending signals to a container. For example, to reload the nginx configuration, you can run the following command:
+
+  ```bash
+  docker kill -s HUP container_name
+  ```
+
+  If you want to restart the NGINX process, restart the container by running the command:
+
+  ```bash
+  docker restart container_name
+  ```
+
+  ### Dockerfile
+
+  Here is the Dockerfile I made for my project :
+
+  ```bash
+  FROM nginx:stable-alpine
+
+  RUN rm -rf /etc/nginx/conf.d
+  COPY conf /etc/nginx
+
+  WORKDIR /usr/share/nginx/html
+  COPY build /usr/share/nginx/html
+  ```
+
+  As I said in my previous post I am using alpine based image in most of my own because they are very lightweight so I am building this image based on the latest nginx:stable-alpine image.
+
+  In our case we just want to override the default nginx configuration, so we remove all the **conf.d** folder and then copy the one we have in our project.
+
+  The folder should looks like this :
+
+  * conf
+    * conf.d
+      * default.conf
+
+  Every file within this directory ending with **.conf** is read into the configuration when nginx is started, so make sure every file defines valid nginx configuration syntax.
+
+  ### default.conf
+
+  We can now set our **default.conf** file as the one bellow. *(It's a very basic one for the purpose of the demo. It's up to you to configure it as you want)*.
+
+  ```bash
+  server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+      root   /usr/share/nginx/html;
+      index  index.html index.htm;
+      try_files $uri $uri/ /index.html;
+    }
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+      root   /usr/share/nginx/html;
+    }
+  }
+  ```
+
+  ## Conclusion
+
+  As I said in the introduction, I had troubles with this because I first thought I had to do it in the nginx-proxy container and completly forgot my app container was served by nginx too... Since you are doing it in the right place, it works like a charm ;-)
+
+</PostContent>
