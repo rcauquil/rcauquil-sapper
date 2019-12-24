@@ -9,8 +9,20 @@
 </script>
 
 <style>
+  div :global(h2) {
+    @apply text-4xl font-light py-6;
+  }
+
+  div :global(h3) {
+    @apply text-3xl font-light py-4;
+  }
+
   div :global(p) {
-    @apply py-6;
+    @apply text-lg font-light pb-8;
+  }
+
+  div :global(pre) {
+    @apply mb-4;
   }
 </style>
 

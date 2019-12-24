@@ -19,6 +19,17 @@
   export let posts;
 </script>
 
+<svelte:head>
+	<title>{ process.env.site.title } - blog</title>
+	<meta name='description' content='{ process.env.site.description }'>
+
+  <meta property='og:url' content='{ process.env.site.url }'>
+  <meta property='og:description' content='{ process.env.site.description }' />
+  <meta property='og:title' content='{ process.env.site.title }'>
+  <meta property='og:type' content='website'>
+  <meta property='og:image' content='ogimage.jpg'>
+</svelte:head>
+
 {#each posts as post, i}
   <div
     in:fly='{{ x: i % 2 ? -60 : 60, duration: 500, delay: i * 50 }}'

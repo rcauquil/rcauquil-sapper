@@ -1,23 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:300,300i,700&display=swap');
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,600,400);
+@import url(http://fonts.googleapis.com/css?family=Prata);
+
 @tailwind base;
 
-h1 {
-  @apply text-2xl;
-}
-h2 {
-  @apply text-xl;
-}
-h3 {
-  @apply text-lg;
-}
-a {
-  @apply text-blue-600 underline;
+html, body {
+  @apply relative font-body bg-background w-full h-full text-dark;
 }
 
-html, body {
-  position: relative;
-  width: 100%;
-  height: 100%;
-	background: #000d2f;
+h1 {
+  @apply text-4xl;
+}
+
+h1, h2, h3, h4, h5, h6,
+a {
+  @apply font-title;
+}
+
+a {
+  @apply text-blue-600 underline;
 }
 
 .background {

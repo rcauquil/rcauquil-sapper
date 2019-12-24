@@ -1,23 +1,26 @@
 import alias from '@rollup/plugin-alias';
-import resolve from 'rollup-plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
+import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import svelte from 'rollup-plugin-svelte';
-import sveltePreprocessPostcss from 'svelte-preprocess-postcss';
 import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
+import sveltePreprocessPostcss from 'svelte-preprocess-postcss';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import { mdsvex } from 'mdsvex';
-import conf from "config";
+import { merge } from 'lodash';
+import conf from 'config';
+
 
 // Env
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 
 // Process the conf for rollup-replace
-const appConfig = Object.keys(conf).reduce((o,c) => {
-  o[`process.env.${c}`] = JSON.stringify(conf[c]);
+const mergedConf = merge({}, conf.all, conf[mode]);
+const appConfig = Object.keys(mergedConf).reduce((o,c) => {
+  o[`process.env.${c}`] = JSON.stringify(mergedConf[c]);
   return o;
 }, {});
 

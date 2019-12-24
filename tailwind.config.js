@@ -1,14 +1,16 @@
 module.exports = {
   theme: {    
     screens: {
+      xxs: '360px',
+      xs: '480px',
       sm: '640px',
       md: '768px',
       lg: '1024px',
       xl: '1280px',
     },
     fontFamily: {
-      display: ['Gilroy', 'sans-serif'],
-      body: ['Graphik', 'sans-serif'],
+      title: ['Gilroy', 'sans-serif'],
+      body: ['Merriweather', 'serif'],
     },
     borderWidth: {
       default: '1px',
@@ -20,7 +22,7 @@ module.exports = {
       colors: {
         white: '#fff',
         light: '#929292',
-        dark: '#4e4e4e',
+        dark: '#282828',
         important: '#ffc400',
         background: '#000d2f'
       }

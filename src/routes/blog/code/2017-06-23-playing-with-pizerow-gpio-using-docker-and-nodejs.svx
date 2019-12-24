@@ -2,7 +2,7 @@
 title: Playing with the pizeroW GPIO using Docker and nodejs
 date: '2017-06-23'
 
-ogImage: /images/code/2017-06-23-ogimage.jpg
+ogImage: blog/code/2017-06-23-ogimage.jpg
 category:
   - code
 picto: fa-code
@@ -12,6 +12,7 @@ tags:
   - Nodejs
   - RPIO
   - rsync
+excerpt_separator: <!--more-->
 ---
 
 ```js exec
@@ -24,6 +25,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 <PostContent>
 
   *It's been a long time since my last post about electronics and how to [use the photon maker kit oled screen](blog/code/2016-03-26-photon-maker-kit-oled) from Particle.io. In this post we'll see how to use raspberrypi's GPIO using Docker and nodejs.*
+  <!--more-->
 
   ## Requirements
 
@@ -118,7 +120,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
   Simply clone the demo I made for this post on my [github account](https://github.com/rcauquil/armnode-demo), in the place you want on your dev machine.
 
   ```bash
-  >git clone https://github.com/rcauquil/armnode-demo.git
+  git clone https://github.com/rcauquil/armnode-demo.git
   ```
 
   As we don't want all the files from the demo on our pi but only **package.json**, **index.js** and **server.js**, we will use **rsync** and its **--exclude-from** flag using the content of the **.rsyncignore**.

@@ -4,10 +4,10 @@
 	export let segment;
 </script>
 
-<div class='container mx-auto py-6'>
+<div class='container mx-auto py-6 px-6 xl:px-32'>
 	<Nav {segment}/>
 </div>
 
-<main class='container mx-auto px-20 py-10'>
+<div class='container mx-auto py-6 px-6 xl:px-32'>
 	<slot></slot>
-</main>
+</div>

@@ -1,8 +1,20 @@
 {
-  "site": {
-    "title": "Romain CAUQUIL - Creative Technologist",
-    "email": "romaincauquilrc@gmail.com",
-    "description": "Hi ! I am Romain Cauquil and I am a french Creative Technologist. I am passionated about design, code, electronic, food and everything you can make yourself ! You will find some of my work and shares about it.",
-    "url": "https://romaincauquil.fr"
+  "all": {
+    "site": {
+      "siteName": "Romain CAUQUIL",
+      "title": "Romain CAUQUIL - Creative Technologist",
+      "email": "romaincauquilrc@gmail.com",
+      "description": "Hi ! I am Romain Cauquil and I am a french Creative Technologist. I am passionated about design, code, electronic, food and everything you can make yourself ! You will find some of my work and shares about it."
+    }
+  },
+  "development": {
+    "site": {
+      "url": "http://localhost:3000"
+    }
+  },
+  "production": {
+    "site": {
+      "url": "https://romaincauquil.fr"
+    }
   }
 }

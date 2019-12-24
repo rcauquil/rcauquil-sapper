@@ -4,8 +4,21 @@
   import Tags from 'src/components/Tags.svelte';
   
   export let data;
-  const { title, date, tags } = data;
+  const { title, date, tags, ogImage } = data;
+  const { siteName, url } = process.env.site;
 </script>
+
+<svelte:head>
+	<title>{ title } - { siteName }</title>
+  <!-- TODO: get the excerpt for description -->
+	<!-- <meta name='description' content='{ process.env.site.description }'> -->
+
+  <meta property='og:url' content='{ url }'>
+  <!-- <meta property='og:description' content='{ process.env.site.description }' /> -->
+  <meta property='og:title' content='{`${title} - ${siteName}`}'>
+  <meta property='og:type' content='website'>
+  <meta property='og:image' content='{ url + '/' + ogImage }'>
+</svelte:head>
 
 <div
   class='text-gray-100 py-10'
