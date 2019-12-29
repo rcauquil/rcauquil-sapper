@@ -1,5 +1,6 @@
 ---
 title: Use the photon maker kit oled screen
+description: Reading data over the web is nice. Sometimes it's better to have a quick glance at it and to use the photon maker kit oled screen. 
 date: '2016-03-26'
 ogImage: /images/code/2016-03-26-breadboard.jpg
 category:

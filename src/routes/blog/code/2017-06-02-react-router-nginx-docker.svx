@@ -1,5 +1,6 @@
 ---
 title: Using react-router with Nginx and Docker
+description: Using react-router with Nginx and Docker can lead to unexpeted result. Here is a simple solution to fix it.
 date: '2017-06-02'
 category:
   - code

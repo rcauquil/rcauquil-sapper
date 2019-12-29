@@ -44,6 +44,10 @@
       <Tags data='{post.tags}'/>
     </div>
 
+    <p class='py-4'>
+      { post.description }
+    </p>
+
     <ReadMore link='blog/{post.category}/{post.slug}'/>
   </div>
 {/each}

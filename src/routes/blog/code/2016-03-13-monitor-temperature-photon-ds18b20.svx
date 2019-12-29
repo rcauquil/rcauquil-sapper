@@ -1,5 +1,6 @@
 ---
 title: Monitor your home temperature over the web
+description: You have plenty of reason to monitor you home temperature over the web. Mine is living on a tropical island with a rabbit.
 date: '2016-03-13'
 ogImage: /blog/code/2016-03-13-fritzing.jpg
 category:

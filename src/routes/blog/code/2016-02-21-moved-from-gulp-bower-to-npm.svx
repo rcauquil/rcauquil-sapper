@@ -1,5 +1,6 @@
 ---
 title: Moved from gulp and bower to only npm
+description: I moved from gulp and bower to only npm. Because I was bored to add and learn all those tools that npm scripts can do.
 date: '2016-02-21'
 category:
   - code

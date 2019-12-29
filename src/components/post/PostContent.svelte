@@ -6,6 +6,9 @@
   import 'prismjs/components/prism-bash';
   import 'prismjs/components/prism-json';
   import 'prismjs/components/prism-yaml';	
+
+  import Icon from 'src/components/Icon.svelte';
+  import { faCode } from '@fortawesome/free-solid-svg-icons';
 </script>
 
 <style>
@@ -58,5 +61,8 @@
   in:fly='{{ x: 40, duration: 500 }}'
   on:introstart='{_ => Prism.highlightAll()}'
 >
+  <div class='text-center mb-12'>
+    <Icon class='text-important text-3xl' icon={ faCode }/>
+  </div>
   <slot></slot>
 </div>
