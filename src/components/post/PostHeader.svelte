@@ -4,17 +4,17 @@
   import Tags from 'src/components/Tags.svelte';
   
   export let data;
-  const { title, description, date, tags, ogImage } = data;
+  const { title, description, date, tags, ogImage, slug } = data;
   const { siteName, url } = process.env.site;
 </script>
 
 <svelte:head>
-	<title>{ title } - { siteName }</title>
-  <meta property='og:url' content='{ url }'>
+	<title>{ title }</title>
+  <meta property='og:url' content='{`${url}/blog/${slug}`}'>
   <meta property='og:description' content='{ description }' />
   <meta property='og:title' content='{`${title} - ${siteName}`}'>
   <meta property='og:type' content='website'>
-  <meta property='og:image' content='{ url + '/' + ogImage }'>
+  <meta property='og:image' content='{`${url}/${ogImage}`}'>
 </svelte:head>
 
 <div

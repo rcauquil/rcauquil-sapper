@@ -2,52 +2,57 @@
   export function preload({ params, query }) {
     return this.fetch('blog.json')
       .then(res => res.json())
-      .then(posts => {
+      .then(data => {
+        const years = Object.keys(data).reverse();
+        const posts = years.reduce((o,c,i) => {
+          o.set(c, Object.values(data[c]).reverse());
+          return o;
+        }, new Map())
+        
         return {
-          posts: posts.reverse()
+          years,
+          posts
         };
       });
   }
 </script>
 
 <script>
+  import { beforeUpdate } from 'svelte';
   import { fly } from 'svelte/transition';
-  import Date from 'src/components/Date.svelte';
-  import Tags from 'src/components/Tags.svelte';
-  import ReadMore from 'src/components/ReadMore.svelte';
+  import SectionTitle from 'src/components/SectionTitle.svelte';
+  import PostItem from 'src/components/post/PostItem.svelte';
 
+  export let years;
   export let posts;
+
+  let count = 0;
+  let setCount = () => count += 1;
+
+  beforeUpdate(() => count = 0);
 </script>
 
 <svelte:head>
-	<title>{ process.env.site.title } - blog</title>
-	<meta name='description' content='{ process.env.site.description }'>
+	<title>Blog - Romain Cauquil</title>
+	<meta name='description' content='Here I share thoughts, tutorials about design, code, electronic, food and everything you can make yourself !'>
 
-  <meta property='og:url' content='{ process.env.site.url }'>
-  <meta property='og:description' content='{ process.env.site.description }' />
-  <meta property='og:title' content='{ process.env.site.title }'>
+  <meta property='og:url' content='{ process.env.site.url }/blog'>
+  <meta property='og:title' content='Blog - Romain Cauquil'>
+  <meta property='og:description' content='Here I share thoughts, tutorials about design, code, electronic, food and everything you can make yourself !' />
   <meta property='og:type' content='website'>
   <meta property='og:image' content='ogimage.jpg'>
 </svelte:head>
 
-{#each posts as post, i}
-  <div
-    in:fly='{{ x: i % 2 ? -60 : 60, duration: 500, delay: i * 50 }}'
-    class='shadow-md bg-gray-100 rounded-lg py-5 px-10 my-5 first:mt-0 last:mb-0'
-  >
-    <h1 class='font-light leading-snug'>
-      {post.title}
-    </h1>
+<main role='main'>
+  <h1 class='text-important pb-6'>Blog - <small>Romain Cauquil</small></h1>
 
-    <div class='flex items-center py-1'>
-      <Date data='{post.date}'/>
-      <Tags data='{post.tags}'/>
-    </div>
-
-    <p class='py-4'>
-      { post.description }
-    </p>
-
-    <ReadMore link='blog/{post.category}/{post.slug}'/>
-  </div>
-{/each}
+  {#each years as year, i}
+    <section class='{ i === 0 ? "mt-6" : "mt-12" }'>
+      <SectionTitle i={setCount()} data={year} />
+      
+      {#each posts.get(year) as { attributes }}
+        <PostItem i={setCount()} data={attributes} />
+      {/each}
+    </section>
+  {/each}
+</main>

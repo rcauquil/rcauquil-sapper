@@ -1,6 +1,6 @@
 ---
-title: Using react-router with Nginx and Docker
-description: Using react-router with Nginx and Docker can lead to unexpeted result. Here is a simple solution to fix it.
+title: How to use react-router with Nginx and Docker
+description: Here is a simple solution to use react-router with Nginx, Docker and how to copy confd to it.
 date: '2017-06-02'
 category:
   - code
