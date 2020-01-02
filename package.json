@@ -1,7 +1,7 @@
 {
   "name": "rcauquil",
   "description": "Personnal website using sapper/svelte and mdsvex",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "scripts": {
     "watch:tailwind": "postcss static/tailwind.css -o static/index.css -w",
     "build:tailwind": "postcss static/tailwind.css -o static/index.css",
