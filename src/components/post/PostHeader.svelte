@@ -6,16 +6,16 @@
   export let data;
   let { title, description, date, tags, ogImage = 'ogimage.jpg', slug } = data;
   const { siteName, url } = process.env.site;
-  // ogImage = ogImage || `ogimage.jpg`;
 </script>
 
 <svelte:head>
 	<title>{ title }</title>
-  <meta property='og:url' content='{`${url}/blog/${slug}`}'>
+  <meta name='description' content='{ description }' />
+  <meta property='og:url' content='{`${url}/blog/${slug}`}' />
   <meta property='og:description' content='{ description }' />
-  <meta property='og:title' content='{`${title} - ${siteName}`}'>
-  <meta property='og:type' content='website'>
-  <meta property='og:image' content='{`${url}/${ogImage}`}'>
+  <meta property='og:title' content='{`${title} - ${siteName}`}' />
+  <meta property='og:type' content='website' />
+  <meta property='og:image' content='{`${url}/${ogImage}`}' />
 </svelte:head>
 
 <div

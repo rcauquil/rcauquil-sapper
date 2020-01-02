@@ -1,6 +1,8 @@
 <script>
 	import Icon from 'src/components/Icon.svelte';
-	import { faMapMarker } from '@fortawesome/free-solid-svg-icons';
+  import { faMapMarker } from '@fortawesome/free-solid-svg-icons';
+  
+  const { title, description, siteName, url } = process.env.site;
 </script>
 
 <style>
@@ -12,14 +14,14 @@
 </style>
 
 <svelte:head>
-	<title>{ process.env.site.title }</title>
-	<meta name='description' content='{ process.env.site.description }'>
+	<title>{ title }</title>
+	<meta name='description' content='{description}' />
 
-  <meta property='og:url' content='{ process.env.site.url }'>
-  <meta property='og:description' content='{ process.env.site.description }' />
-  <meta property='og:title' content='{ process.env.site.title }'>
-  <meta property='og:type' content='website'>
-  <meta property='og:image' content='ogimage.jpg'>
+  <meta property='og:url' content='{url}' />
+  <meta property='og:description' content='{description}' />
+  <meta property='og:title' content='{ title }' />
+  <meta property='og:type' content='website' />
+  <meta property='og:image' content='{`${url}/ogimage.jpg`}' />
 </svelte:head>
 
 <div id='intro' class='text-white font-title'>

@@ -36,7 +36,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
   ## Schematics
 
-  ![fritzing schematics](blog/code/2016-03-13-fritzing.jpg "Fritzing Schematics")
+  ![fritzing schematics](blog/2016-03-13-fritzing.jpg "Fritzing Schematics")
 
 
   ## Firmware

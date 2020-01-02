@@ -2,7 +2,7 @@
 	import Logo from 'src/components/Logo.svelte';
 	import Icon from 'src/components/Icon.svelte';
 	import { faCode } from '@fortawesome/free-solid-svg-icons';
-	import { faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+	import { faInstagram, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 
 	export let segment;
 </script>
@@ -32,6 +32,10 @@
 		<!-- Linkedin -->
 		<a href='https://www.linkedin.com/in/romain-cauquil-b642aa40/' title='Linkedin account - Romain Cauquil' target='_blank'>
 			<Icon icon={ faLinkedin }/>
+		</a>
+		<!-- Github -->
+		<a href='https://github.com/rcauquil' title='Github account - rcauquil' target='_blank'>
+			<Icon icon={ faGithub }/>
 		</a>		
 		<!-- Blog -->
 		<a rel=prefetch class:selected='{segment === "blog"}' href='blog' title='Blog posts about code'>

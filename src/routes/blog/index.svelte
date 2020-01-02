@@ -33,11 +33,11 @@
 </script>
 
 <svelte:head>
-	<title>Blog - @rcauquil</title>
+	<title>Blog - @rcauquil : design, code, electronic, food and diy</title>
 	<meta name='description' content='Here I share thoughts, tutorials about design, code, electronic, food and everything you can make yourself !'>
 
   <meta property='og:url' content='{ process.env.site.url }/blog'>
-  <meta property='og:title' content='Blog - Romain Cauquil'>
+  <meta property='og:title' content='Blog - @rcauquil : design, code, electronic, food and diy'>
   <meta property='og:description' content='Here I share thoughts, tutorials about design, code, electronic, food and everything you can make yourself !' />
   <meta property='og:type' content='website'>
   <meta property='og:image' content='ogimage.jpg'>

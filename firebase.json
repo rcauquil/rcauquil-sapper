@@ -1,0 +1,35 @@
+{
+  "hosting": {
+    "public": "__sapper__/export",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [{
+      "source": "/code/2017/06/23/playing-with-pizerow-gpio-using-docker-and-nodejs/",
+      "destination": "/blog/2017/how-to-use-pizerow-gpio-with-docker-and-nodejs",
+      "type": 301
+    },{
+      "source": "/code/2017/06/02/react-router-nginx-docker/",
+      "destination": "/blog/2017/how-to-use-react-router-nginx-docker",
+      "type": 301
+    },{
+      "source": "/code/2017/05/29/easy-https-on-vps-with-docker/",
+      "destination": "/blog/2017/how-to-add-https-and-apps-on-vps-with-docker",
+      "type": 301
+    },{
+      "source": "/code/2016/03/26/photon-maker-kit-oled/",
+      "destination": "/blog/2016/how-to-use-photon-maker-kit-oled",
+      "type": 301
+    },{
+      "source": "/code/2016/03/13/monitor-temperature-photon-ds18b20/",
+      "destination": "/blog/2016/how-to-use-photon-ds18b20",
+      "type": 301
+    },{
+      "source": "/code/2016/02/21/moved-from-gulp-bower-to-npm/",
+      "destination": "/blog/2016/moving-from-gulp-and-bower-to-npm-scripts",
+      "type": 301
+    }]
+  }
+}

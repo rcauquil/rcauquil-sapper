@@ -25,7 +25,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
 <PostContent>
 
-  *It's been a long time since my last post about electronics and how to [use the photon maker kit oled screen](blog/code/2016-03-26-photon-maker-kit-oled) from Particle.io. In this post we'll see how to use raspberrypi's GPIO using Docker and nodejs.*
+  *It's been a long time since my last post about electronics and how to [use the photon maker kit oled screen](/blog/2016/how-to-use-photon-maker-kit-oled) from Particle.io. In this post we'll see how to use raspberrypi's GPIO using Docker and nodejs.*
   <!--more-->
 
   ## Requirements
@@ -144,7 +144,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
   > On this following schematic the cathode is on the left *(connected to one of the many gnd provided by the pi)* and the anode on the right *(connected to the P12 / GPIO18 following the Blink and LED example)*.
 
-  ![fritzing schematics](blog/code/2017-06-23-fritzing.jpg "Fritzing Schematics")
+  ![fritzing schematics](blog/2017-06-23-fritzing.jpg "Fritzing Schematics")
 
   ### 5/ Running our container
 
