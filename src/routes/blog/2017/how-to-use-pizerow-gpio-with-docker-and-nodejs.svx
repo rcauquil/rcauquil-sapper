@@ -1,8 +1,9 @@
 ---
 title: How to use the pizeroW GPIO using Docker and nodejs
-description: Here is how to use the pizeroW GPIO with Docker and nodejs and how to give privileges to containers.
+description: Tutorial about using the pizeroW GPIO with Docker, nodejs and how to give privileges to containers.
+slug: how-to-use-pizerow-gpio-with-docker-and-nodejs
 date: '2017-06-23'
-ogImage: blog/code/2017-06-23-ogimage.jpg
+ogImage: blog/2017-06-23-ogimage.jpg
 category:
   - code
 picto: fa-code

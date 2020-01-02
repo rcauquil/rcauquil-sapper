@@ -1,8 +1,8 @@
 ---
 title: How to use the photon maker kit oled screen
-description: Here is how to use the photon maker kit oled screen to have a quick glance at your data.
+description: Tutorial and schematics about using the photon maker kit oled screen to have a quick glance at your data.
+slug: how-to-use-photon-maker-kit-oled
 date: '2016-03-26'
-ogImage: /images/code/2016-03-26-breadboard.jpg
 category:
   - code
 picto: fa-code

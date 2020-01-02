@@ -4,8 +4,9 @@
   import Tags from 'src/components/Tags.svelte';
   
   export let data;
-  const { title, description, date, tags, ogImage, slug } = data;
+  let { title, description, date, tags, ogImage = 'ogimage.jpg', slug } = data;
   const { siteName, url } = process.env.site;
+  // ogImage = ogImage || `ogimage.jpg`;
 </script>
 
 <svelte:head>

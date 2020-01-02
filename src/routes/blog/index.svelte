@@ -33,7 +33,7 @@
 </script>
 
 <svelte:head>
-	<title>Blog - Romain Cauquil</title>
+	<title>Blog - @rcauquil</title>
 	<meta name='description' content='Here I share thoughts, tutorials about design, code, electronic, food and everything you can make yourself !'>
 
   <meta property='og:url' content='{ process.env.site.url }/blog'>
@@ -44,7 +44,8 @@
 </svelte:head>
 
 <main role='main'>
-  <h1 class='text-important pb-6'>Blog - <small>Romain Cauquil</small></h1>
+  <h1 class='text-important pb-2'>Blog - <small>@rcauquil</small></h1>
+  <p class='text-white text-xl font-title pb-6'>Thoughts and tutorials about design, code, electronic, food and everything you can make yourself.</p>
 
   {#each years as year, i}
     <section class='{ i === 0 ? "mt-6" : "mt-12" }'>

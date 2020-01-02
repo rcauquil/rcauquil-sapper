@@ -27,7 +27,6 @@ function svexTree(dir, fileTree = {}) {
           const content = fs.readFileSync(path.join(dir, fileName), 'utf8');        
           // Get attributes
           const { attributes } = fm(content);
-          attributes.slug = fileName.split('.')[0];
           // Set timekey to correctly sort the post by date                  
           const timeKey = attributes.date.replace(/-/g,'');
           // Set the tree

@@ -9,11 +9,11 @@
 </script>
 
 <article
-  in:fly='{{ x: i % 2 ? -60 : 60, duration: 300, delay: i * 50 }}'
+  in:fly='{{ x: i % 2 ? -60 : 60, duration: 500, delay: i * 50 }}'
   class='shadow-md bg-gray-100 rounded-lg py-5 px-10 my-5 first:mt-0 last:mb-0'
 >
   <h2 class='font-light leading-snug text-3xl'>
-    {data.title} { i }
+    {data.title}
   </h2>
 
   <div class='flex items-center py-1'>

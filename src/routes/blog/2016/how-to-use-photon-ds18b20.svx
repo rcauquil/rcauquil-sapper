@@ -1,8 +1,8 @@
 ---
 title: How to use the photon ds18b20
-description: Here is how to use the photon ds18b20 on photon to monitor you home temperature over the web.
+description: Tutorial and schematics about using the ds18b20 sensor on a photon development board to monitor temperature over the web.
+slug: how-to-use-photon-ds18b20
 date: '2016-03-13'
-ogImage: /blog/code/2016-03-13-fritzing.jpg
 category:
   - code
 picto: fa-code

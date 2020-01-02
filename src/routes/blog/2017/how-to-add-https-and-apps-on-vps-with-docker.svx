@@ -1,6 +1,7 @@
 ---
 title: How to add https and multiple apps on a vps using Docker
-description: Here is how to add https and multiple apps on a vps using Docker in a simple and easy way.
+description: Tutorial about adding https and multiple apps on a vps using Docker in a simple and easy way.
+slug: how-to-add-https-and-apps-on-vps-with-docker
 date: '2017-05-29'
 category:
   - code

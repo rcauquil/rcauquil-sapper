@@ -1,6 +1,7 @@
 ---
 title: Moving from gulp and bower to npm scripts
-description: Moving from gulp and bower to npm scripts allow you to keep only one tool to manage your project.
+description: Tutorial and thoughts about moving from gulp and bower to only npm scripts for managing and building your projects.
+slug: moving-from-gulp-and-bower-to-npm-scripts
 date: '2016-02-21'
 category:
   - code
