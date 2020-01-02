@@ -11,6 +11,7 @@ module.exports = {
     fontFamily: {
       title: ['Gilroy', 'sans-serif'],
       body: ['Merriweather', 'serif'],
+      prata: ['Prata']
     },
     borderWidth: {
       default: '1px',
@@ -25,6 +26,9 @@ module.exports = {
         dark: '#282828',
         important: '#ffc400',
         background: '#000d2f'
+      },
+      fontSize: {
+        '7xl': '5rem'
       }
     }
   },

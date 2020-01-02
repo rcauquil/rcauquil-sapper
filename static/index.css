@@ -3721,6 +3721,10 @@ h1, h2, h3, h4, h5, h6, a {
   font-family: Merriweather, serif;
 }
 
+.font-prata{
+  font-family: Prata;
+}
+
 .font-hairline{
   font-weight: 100;
 }
@@ -10421,6 +10425,10 @@ h1, h2, h3, h4, h5, h6, a {
   font-size: 4rem;
 }
 
+.text-7xl{
+  font-size: 5rem;
+}
+
 .italic{
   font-style: italic;
 }
@@ -13883,6 +13891,10 @@ h1, h2, h3, h4, h5, h6, a {
     font-family: Merriweather, serif;
   }
 
+  .xxs\:font-prata{
+    font-family: Prata;
+  }
+
   .xxs\:font-hairline{
     font-weight: 100;
   }
@@ -17161,6 +17173,10 @@ h1, h2, h3, h4, h5, h6, a {
 
   .xxs\:text-6xl{
     font-size: 4rem;
+  }
+
+  .xxs\:text-7xl{
+    font-size: 5rem;
   }
 
   .xxs\:italic{
@@ -20626,6 +20642,10 @@ h1, h2, h3, h4, h5, h6, a {
     font-family: Merriweather, serif;
   }
 
+  .xs\:font-prata{
+    font-family: Prata;
+  }
+
   .xs\:font-hairline{
     font-weight: 100;
   }
@@ -23904,6 +23924,10 @@ h1, h2, h3, h4, h5, h6, a {
 
   .xs\:text-6xl{
     font-size: 4rem;
+  }
+
+  .xs\:text-7xl{
+    font-size: 5rem;
   }
 
   .xs\:italic{
@@ -27369,6 +27393,10 @@ h1, h2, h3, h4, h5, h6, a {
     font-family: Merriweather, serif;
   }
 
+  .sm\:font-prata{
+    font-family: Prata;
+  }
+
   .sm\:font-hairline{
     font-weight: 100;
   }
@@ -30647,6 +30675,10 @@ h1, h2, h3, h4, h5, h6, a {
 
   .sm\:text-6xl{
     font-size: 4rem;
+  }
+
+  .sm\:text-7xl{
+    font-size: 5rem;
   }
 
   .sm\:italic{
@@ -34112,6 +34144,10 @@ h1, h2, h3, h4, h5, h6, a {
     font-family: Merriweather, serif;
   }
 
+  .md\:font-prata{
+    font-family: Prata;
+  }
+
   .md\:font-hairline{
     font-weight: 100;
   }
@@ -37390,6 +37426,10 @@ h1, h2, h3, h4, h5, h6, a {
 
   .md\:text-6xl{
     font-size: 4rem;
+  }
+
+  .md\:text-7xl{
+    font-size: 5rem;
   }
 
   .md\:italic{
@@ -40855,6 +40895,10 @@ h1, h2, h3, h4, h5, h6, a {
     font-family: Merriweather, serif;
   }
 
+  .lg\:font-prata{
+    font-family: Prata;
+  }
+
   .lg\:font-hairline{
     font-weight: 100;
   }
@@ -44133,6 +44177,10 @@ h1, h2, h3, h4, h5, h6, a {
 
   .lg\:text-6xl{
     font-size: 4rem;
+  }
+
+  .lg\:text-7xl{
+    font-size: 5rem;
   }
 
   .lg\:italic{
@@ -47598,6 +47646,10 @@ h1, h2, h3, h4, h5, h6, a {
     font-family: Merriweather, serif;
   }
 
+  .xl\:font-prata{
+    font-family: Prata;
+  }
+
   .xl\:font-hairline{
     font-weight: 100;
   }
@@ -50876,6 +50928,10 @@ h1, h2, h3, h4, h5, h6, a {
 
   .xl\:text-6xl{
     font-size: 4rem;
+  }
+
+  .xl\:text-7xl{
+    font-size: 5rem;
   }
 
   .xl\:italic{

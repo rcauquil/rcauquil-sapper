@@ -3,6 +3,14 @@
 	import { faMapMarker } from '@fortawesome/free-solid-svg-icons';
 </script>
 
+<style>
+  #intro {
+    position: absolute;
+    top: 50%;
+    margin-top: -65px;
+  }
+</style>
+
 <svelte:head>
 	<title>{ process.env.site.title }</title>
 	<meta name='description' content='{ process.env.site.description }'>
@@ -14,10 +22,18 @@
   <meta property='og:image' content='ogimage.jpg'>
 </svelte:head>
 
-<div id='homepage'>
-  <h1><span class='text-important'>CREA<span class='bold'>TIVE</span></span></h1>
-  <div class='baseline'>
-    <h2>technologist</h2>
-    <p class='baseline-place'><Icon icon={ faMapMarker }/> <span>Toulouse, France</span></p>
+<div id='intro' class='text-white font-title'>
+  <div class='text-5xl sm:text-7xl leading-none'>
+    <span class='font-light'>CREA</span><span class='font-normal'>TIVE</span>
+  </div>
+
+  <div class='flex flex-col sm:flex-row sm:items-center'>
+    <span class='ml-1 font-prata text-2xl sm:text-4xl'>
+      technologist
+    </span>
+
+    <span class='ml-1 sm:ml-4 text-important text-sm sm:text-lg flex items-center'>
+      <Icon icon={ faMapMarker }/> <span class='ml-1'>Toulouse, France</span>
+    </span>
   </div>
 </div>

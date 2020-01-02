@@ -19,7 +19,7 @@
 	}
 </style>
 
-<nav class='flex items-center justify-between h-10 my-1 text-important'>
+<nav class='flex items-center justify-between h-6 sm:h-8 my-1 text-important'>
 	<a style='height:100%' class:selected='{segment === undefined}' href='.'>
 		<Logo />
 	</a>

@@ -57,7 +57,7 @@
 </style>
 
 <div
-  class='bg-gray-100 p-20'
+  class='bg-gray-100 px-4 py-8 sm:p-20'
   in:fly='{{ x: 40, duration: 500 }}'
   on:introstart='{_ => Prism.highlightAll()}'
 >
