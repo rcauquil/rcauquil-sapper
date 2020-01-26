@@ -1,7 +1,6 @@
 import fm from 'front-matter';
 const fs = require('fs');
 const path = require('path');
-const env = process.env.NODE_ENV;
 
 const POSTS_DIR = `${process.cwd()}/src/routes/blog`;
 
@@ -23,10 +22,7 @@ function svexTree(dir, fileTree = {}) {
       // Update the free     
       } else {
         // Only add svex files
-        if (
-          /\.svx$/.test(fileName)
-          && (env === 'development' ? true : !/^_/.test(fileName))
-        ) {          
+        if (/\.svx$/.test(fileName)) {          
           // Get content
           const content = fs.readFileSync(path.join(dir, fileName), 'utf8');        
           // Get attributes
