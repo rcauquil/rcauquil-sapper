@@ -12,4 +12,37 @@ tags:
   - Analytics
 ---
 
-# Title
+```js exec
+import PostHeader from 'src/components/post/PostHeader.svelte';
+import PostContent from 'src/components/post/PostContent.svelte';
+```
+
+<PostHeader data={_metadata} />
+
+<PostContent>
+
+  Recently I launched a simple monoproduct boutique using sapper.   
+  I started an adwords campaign and everything went well *(ads were shown and cliqued)*.   
+  
+  As it is a single page with the payment form in it, my overall boucing rate is ~100% which is perfectly understandable.
+ 
+  BUT the average session time is 00:00:00 ! A quick look into the google doc and it's said that analytics set time to 0 for ending page *(page not followed by another page of same site)*
+
+  However as I am using the firebase stack for: 
+
+  * **Host**: hosting the static boutique.
+  * **Auth**: getting anonymous user and add better security rules.
+  * **RealtimeDB**: storing user's form data.
+  * **Storage**: storing the user's picture.
+
+  I already have all I need to implement a simple session time tracker.
+
+
+  with firebase we can get onDisconnect
+  getting starting time on page
+  setting onDisconnect time on database
+  using cloud function to calculate the session time base on start ad end time
+
+  
+
+</PostContent>
