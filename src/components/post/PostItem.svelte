@@ -10,9 +10,9 @@
 
 <article
   in:fly='{{ x: i % 2 ? -60 : 60, duration: 500, delay: i * 50 }}'
-  class='shadow-md bg-gray-100 rounded-lg py-5 px-10 my-5 first:mt-0 last:mb-0'
+  class='shadow-md bg-gray-100 rounded-lg py-5 px-5 md:px-10 my-5 first:mt-0 last:mb-0'
 >
-  <h2 class='font-light leading-snug text-3xl'>
+  <h2 class='leading-snug text-xl md:text-2xl'>
     {data.title}
   </h2>
 
@@ -21,7 +21,7 @@
     <Tags data='{data.tags}'/>
   </div>
 
-  <p class='py-4'>
+  <p class='hidden md:block py-4'>
     { data.description }
   </p>
 
