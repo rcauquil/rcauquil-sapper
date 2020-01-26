@@ -7,7 +7,7 @@
         const posts = years.reduce((o,c,i) => {
           o.set(c, Object.values(data[c]).reverse());
           return o;
-        }, new Map())
+        }, new Map());
         
         return {
           years,
@@ -48,12 +48,14 @@
   <p class='text-white text-xl font-title pb-6'>Thoughts and tutorials about design, code, electronic, food and everything you can make yourself.</p>
 
   {#each years as year, i}
-    <section class='{ i === 0 ? "mt-6" : "mt-12" }'>
-      <SectionTitle i={setCount()} data={year} />
-      
-      {#each posts.get(year) as { attributes }}
-        <PostItem i={setCount()} data={attributes} />
-      {/each}
-    </section>
+    {#if posts.get(year).length}
+      <section class='{ i === 0 ? "mt-6" : "mt-12" }'>
+        <SectionTitle i={setCount()} data={year} />    
+
+        {#each posts.get(year) as { attributes }}
+          <PostItem i={setCount()} data={attributes} />
+        {/each}
+      </section>
+    {/if}
   {/each}
 </main>

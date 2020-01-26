@@ -22,7 +22,7 @@ function svexTree(dir, fileTree = {}) {
       // Update the free     
       } else {
         // Only add svex files
-        if (/\.svx$/.test(fileName)) {          
+        if (/\.svx$/.test(fileName) && !/^_/.test(fileName)) {          
           // Get content
           const content = fs.readFileSync(path.join(dir, fileName), 'utf8');        
           // Get attributes

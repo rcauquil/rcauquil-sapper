@@ -1,0 +1,15 @@
+---
+title: Saving landing page session time using the firebase stack
+description: Analytics can't get the session time of a 100% rebond (mono page), so we'll implement a simple one using the firebase stack.
+slug: saving-landing-page-session-time-using-firebase
+date: '2020-02-01'
+category:
+  - code
+picto: fa-code
+tags:
+  - Firebase
+  - Landing Page
+  - Analytics
+---
+
+# Title

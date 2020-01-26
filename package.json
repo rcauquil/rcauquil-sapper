@@ -5,10 +5,11 @@
   "scripts": {
     "watch:tailwind": "postcss static/tailwind.css -o static/index.css -w",
     "build:tailwind": "postcss static/tailwind.css -o static/index.css",
-    "build": "npm run build:tailwind && sapper build",
+    "build": "npm run build:tailwind && NODE_ENV=production sapper build",
     "dev": "sapper dev --ext '.svelte .svx'",
-    "start": "run-p watch:tailwind dev",
-    "export": "sapper export --ext '.svelte .svx'"
+    "start:dev": "run-p watch:tailwind dev",
+    "start": "node __sapper__/build",
+    "export": "NODE_ENV=production sapper export --ext '.svelte .svx'"
   },
   "dependencies": {
     "compression": "^1.7.1",
