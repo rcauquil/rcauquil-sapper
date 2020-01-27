@@ -36,6 +36,12 @@
     @apply mb-4;
   }
 
+  div :global(code:not([class])) {
+    @apply text-gray-200 px-2 py-1 text-sm;
+    border-radius: 0.3em;
+    background:#272822;
+  }
+
   div :global(blockquote) {
     @apply border-l-4 border-important px-6 pt-4 pb-6 mt-1 mb-8 text-gray-600 italic;
   }
@@ -46,6 +52,9 @@
 
   div :global(ul) {
     @apply text-base font-light pb-6 list-disc list-inside pl-4;
+  }
+  div :global(ul ul) {
+    @apply pb-0;
   }
   div :global(li) {
     @apply py-2;

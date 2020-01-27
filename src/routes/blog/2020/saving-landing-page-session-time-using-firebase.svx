@@ -1,0 +1,95 @@
+---
+title: Saving landing page session time using the firebase stack
+description: Analytics can't get the session time of a 100% rebond (mono page), so we'll implement a simple one using the firebase stack.
+slug: saving-landing-page-session-time-using-firebase
+date: '2020-02-01'
+category:
+  - code
+picto: fa-code
+tags:
+  - Firebase
+  - Landing Page
+  - Analytics
+---
+
+```js exec
+import PostHeader from 'src/components/post/PostHeader.svelte';
+import PostContent from 'src/components/post/PostContent.svelte';
+```
+
+<PostHeader data={_metadata} />
+
+<PostContent>
+
+  Recently I launched a simple [Print on Demand boutique](https://9mois2toi.fr) using sapper.  
+  I started an adwords campaign and everything went well *(ads were shown and cliqued)*.   
+  
+  As it is a single page with the payment form in it, my overall bounce rate is ~100% which is perfectly understandable *(people not interested yet, looks at the page and leave)*.
+ 
+  Because of that the average session time is 00:00:00 ! According to [google doc](https://support.google.com/analytics/answer/1009409?hl=en), analytics **can't track** time in this case and thus sets 0, which is annoying to get this insight;
+
+  ## 🔥 Firebase to the rescue
+
+  I was not a huge fan before, but lets be honest the stack is awesome and very convenient to build things quick. As a result I am using almost all of the stack here for:
+
+  * **Host**: hosting the static boutique.
+  * **Auth**: getting anonymous user and add better security rules *(to protect their data)*.
+  * **RealtimeDB**: storing user's form data.
+  * **Storage**: storing the user's picture.
+  * **Functions**: automating processes.
+
+  ### Firebase Auth
+
+  With firebase Auth you can easily add Google, Facebook, Github, email/password etc.. but you can also use **Anonymous user** which is neat to store data and to associate it to a real account latter. But in my case I am using it to add stronger security rules to protects my clients data.
+
+  > For the rest of this article I will assume you know how to settup firebase, however feel free to contact me on [linkedin](https://www.linkedin.com/in/romain-cauquil-b642aa40/).
+
+  #### Database structure
+
+  For my needs I wanted something very simple just to grasp an overall idea of time spent per user and structured the analytics db this way:
+
+  * analytics
+    * currentDay *(YYYYMMDD)*
+      * userId : sessionTime *(hh:mm:ss)*
+
+  #### Anonymous Auth
+
+  Here we are initializing the firebase instance, requesting an anonymous user and listening to auth state change.
+
+  ```javascript
+  firebaseApp = firebase.initializeApp(process.env.firebase);
+  firebaseApp.auth().signInAnonymously();
+  firebaseApp.auth().onAuthStateChanged(u => {
+    sessionTimeHandler(u);
+  });
+  ```
+
+  #### How to know a user leaved the page ?
+
+  Firebase as a RealtimeDB keeps a connection between the client and the database. Therefore they provide us a very neat function called `onDisconnect`.
+
+  > The onDisconnect class allows you to write or clear data when your client disconnects from the Database server. These updates occur whether your client disconnects cleanly or not, so you can rely on them to clean up data even if a connection is dropped or a client crashes.
+
+  We are going to use it to store the **starting** and **ending** session timestamp. However as onDisconnect can't get data from the client when the connection has dropped we need to call `firebase.database.ServerValue.TIMESTAMP` for the ending timestamp *(which tells firebase to use its server timestamp)*.
+
+  ```javascript
+  function sessionTimeHandler(u) {
+    // If no user do not proceed
+    if (!u) { return; }
+    // Format the current time to : YYYYMMDD
+    const currentDay = new Date().toISOString().slice(0,10).split('-').join(''); 
+    // Reference to our analytics database
+    const analyticsRef = $firebaseApp.database().ref(`analytics/${currentDay}/${u.uid}`);
+    // On disconnect
+    analyticsRef.onDisconnect().set({
+      s: Date.now(),
+      e: firebase.database.ServerValue.TIMESTAMP
+    });
+  }
+  ```
+
+  using cloud function to calculate the session time base on start ad end time
+
+  
+
+</PostContent>
