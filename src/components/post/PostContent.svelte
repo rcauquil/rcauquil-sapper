@@ -41,9 +41,8 @@
   }
 
   div :global(code:not([class])) {
-    @apply text-gray-200 px-2 py-1 text-sm;
+    @apply bg-gray-200 text-gray-700 px-2 py-1 text-sm;
     border-radius: 0.3em;
-    background:#272822;
   }
 
   div :global(blockquote) {
