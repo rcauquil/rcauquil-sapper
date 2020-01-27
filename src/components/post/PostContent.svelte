@@ -28,6 +28,10 @@
     @apply text-3xl font-light py-4;
   }
 
+  div :global(h4) {
+    @apply text-2xl font-light py-4;
+  }
+
   div :global(p) {
     @apply text-lg font-light pb-8 leading-relaxed;
   }
