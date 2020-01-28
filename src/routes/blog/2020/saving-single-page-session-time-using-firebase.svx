@@ -1,8 +1,8 @@
 ---
 title: Saving single page session time using the firebase stack
-description: Analytics can't get the session time of a 100% rebond (mono page), so we'll implement a simple one using the firebase stack.
+description: Analytics can't get the session time of a 100% bounce rate (single page), so we'll see how to implement a simple time tracker using the firebase stack.
 slug: saving-single-page-session-time-using-firebase
-date: '2020-02-01'
+date: '2020-01-28'
 category:
   - code
 picto: fa-code
@@ -121,5 +121,5 @@ import PostContent from 'src/components/post/PostContent.svelte';
   ## Conclusion
 
   When you have a very poor average session time in analytics, don't forget to check your bounce rate. If this one is close to 100%, it's normal and your ads budget is probably not killed by bots. However you can implement very simple strategies using firebase to get a better insight of how your users behave with your site.
-  
+
 </PostContent>
