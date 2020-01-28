@@ -40,7 +40,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
   ### Firebase Auth
 
-  With firebase Auth you can easily add Google, Facebook, Github, email/password etc.. but you can also use **Anonymous signin** which is neat to store data and to associate it to a real account latter. But in my case I am using it to add stronger security rules to protects my clients data.
+  With firebase Auth you can easily add Google, Facebook, Github, email/password etc.. but you can also use **Anonymous signin** which is neat to store data and to associate it to a real account later. But in my case I am using it to add stronger security rules to protects my clients data.
 
   > For the rest of this article I will assume you know how to settup firebase, however feel free to contact me on [linkedin](https://www.linkedin.com/in/romain-cauquil-b642aa40/).
 
@@ -54,7 +54,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
   #### Anonymous Auth
 
-  Here we are initializing the firebase instance, requesting an anonymous user and listening to auth state change, then assing the result to our handler.
+  Here we are initializing the firebase instance, requesting an anonymous user and listening to auth state change, then assigning the result to our handler.
 
   ```javascript
   firebaseApp = firebase.initializeApp(process.env.firebase);
@@ -64,7 +64,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
   });
   ```
 
-  #### How to know a user leaved the page ?
+  #### How do we know when a user leaves the page?
 
   Firebase is a RealtimeDB and keeps a connection between the client and the database. Therefore they provide us an handy function called `onDisconnect`.
 
@@ -72,7 +72,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
   We are going to use it to store the **starting** and **ending** session timestamp. However as `onDisconnect` can't get data from the client when the connection has dropped we need to call `firebase.database.ServerValue.TIMESTAMP` for the ending timestamp *(which tells firebase to use its server timestamp)*.
 
-  In this case I am using `set` to overide previous data *(but you can do whatever your want)*.
+  In this case I am using `set` to overide previous data *(but you can do whatever you want)*.
 
   ```javascript
   function sessionTimeHandler(u) {
@@ -90,13 +90,13 @@ import PostContent from 'src/components/post/PostContent.svelte';
   }
   ```
 
-  > You can attache `onDisconnect` to any ref, so use it on the one you want to make changes.
+  > You can attach `onDisconnect` to any ref, so use it on the one you want to make changes.
 
   #### Post processing using firebase functions
 
   Now that we are able to store *starting* and *ending* session timestamp in our database and our user left us, we need to process this data to a more human readable format.
 
-  Good news! Firebase functions are perfects for this task and offer us with plenty of triggers capabilities. In our case we are going to use the [Realtime Database Triggers](https://firebase.google.com/docs/functions/database-events).
+  Good news! Firebase functions are perfect for this task and offer us with plenty of triggers capabilities. In our case we are going to use the [Realtime Database Triggers](https://firebase.google.com/docs/functions/database-events).
 
   ```javascript
   exports.sessionTime = functions
