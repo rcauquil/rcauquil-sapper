@@ -24,9 +24,9 @@ import PostContent from 'src/components/post/PostContent.svelte';
   Recently I launched a simple [Print on Demand boutique](https://9mois2toi.fr) using sapper.  
   I started an adwords campaign and everything went well *(ads were shown and cliqued)*.   
   
-  As it is a single page with the payment form in it, my overall bounce rate is ~100% which is perfectly understandable *(people not interested yet, looks at the page and leave)*.
+  As it is a single page with the payment form in it, my overall bounce rate is ~100% which is perfectly understandable *(people not interested yet, look at the page and leave)*.
  
-  Because of that the average session time is 00:00:00 ! According to [google doc](https://support.google.com/analytics/answer/1009409?hl=en), analytics **can't track** time in this case and thus sets 0, which is annoying to get this insight;
+  Because of that, the average session time is 00:00:00 ! According to [google doc](https://support.google.com/analytics/answer/1009409?hl=en), analytics **can't track** time in this case and thus sets it to 0, which is annoying to get this insight;
 
   ## 🔥 Firebase to the rescue
 
@@ -49,8 +49,8 @@ import PostContent from 'src/components/post/PostContent.svelte';
   For my needs I wanted something very simple just to grasp an overall idea of time spent per user and structured the analytics db this way:
 
   * analytics
-    * currentDay *(YYYYMMDD)*
-      * userId : sessionTime *(hh:mm:ss)*
+    * \<currentDay\> *(YYYYMMDD)*
+      * \<userId\> : \<sessionTime\> *(hh:mm:ss)*
 
   #### Anonymous Auth
 
@@ -94,9 +94,9 @@ import PostContent from 'src/components/post/PostContent.svelte';
 
   #### Post processing using firebase functions
 
-  Now that we are able to store starting and ending session timestamp in our database and our user left us, we need to process this data to a more human readable format.
+  Now that we are able to store *starting* and *ending* session timestamp in our database and our user left us, we need to process this data to a more human readable format.
 
-  Good news firebase functions are perfects for this task and offer us with plenty of triggers capabilities. In our case we are going to use the [Realtime Database Triggers](https://firebase.google.com/docs/functions/database-events).
+  Good news! Firebase functions are perfects for this task and offer us with plenty of triggers capabilities. In our case we are going to use the [Realtime Database Triggers](https://firebase.google.com/docs/functions/database-events).
 
   ```javascript
   exports.sessionTime = functions
@@ -118,4 +118,8 @@ import PostContent from 'src/components/post/PostContent.svelte';
     });
   ```
 
+  ## Conclusion
+
+  When you have a very poor average session time in analytics, don't forget to check your bounce rate. If this one is close to 100%, it's normal and your ads budget is probably not killed by bots. However you can implement very simple strategies using firebase to get a better insight of how your users behave with your site.
+  
 </PostContent>
