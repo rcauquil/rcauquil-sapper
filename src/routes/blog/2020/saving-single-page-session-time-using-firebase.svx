@@ -22,7 +22,7 @@ import PostContent from 'src/components/post/PostContent.svelte';
 <PostContent>
 
   Recently I launched a simple [Print on Demand boutique](https://9mois2toi.fr) using sapper.  
-  I started an adwords campaign and everything went well *(ads were shown and cliqued)*.   
+  I started an adwords campaign and everything went well *(ads were shown and clicked)*.   
   
   As it is a single page with the payment form in it, my overall bounce rate is ~100% which is perfectly understandable *(people not interested yet, look at the page and leave)*.
  
