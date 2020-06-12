@@ -1,8 +1,10 @@
 <script>
-	import Icon from 'src/components/Icon.svelte';
+  import Icon from 'src/components/Icon.svelte';
+  import Tags from 'src/components/Tags.svelte';
   import { faMapMarker } from '@fortawesome/free-solid-svg-icons';
   
   const { title, description, siteName, url } = process.env.site;
+  const tags = ['IoT', 'Svelte/React', 'Flutter', 'Firebase'];
 </script>
 
 <style>
@@ -26,16 +28,20 @@
 
 <div id='intro' class='text-white font-title'>
   <div class='text-5xl sm:text-7xl leading-none'>
-    <span class='font-light'>CREA</span><span class='font-normal'>TIVE</span>
+    <span class='font-normal'>FULL</span><span class='font-light'>STACK</span>
   </div>
 
-  <div class='flex flex-col sm:flex-row sm:items-center'>
+  <div class='flex sm:flex-row sm:items-center'>
     <span class='ml-1 font-prata text-2xl sm:text-4xl'>
-      technologist
+      javascript
     </span>
 
-    <span class='ml-1 sm:ml-4 text-important text-sm sm:text-lg flex items-center'>
-      <Icon icon={ faMapMarker }/> <span class='ml-1'>Toulouse, France</span>
+    <span class='ml-2 sm:ml-4 text-important text-sm sm:text-lg flex items-center'>
+      <Icon icon={ faMapMarker }/> <span class='ml-1'>world [remote]</span>
     </span>
+  </div>
+
+  <div>
+    <Tags data='{ tags }' />
   </div>
 </div>
