@@ -3,6 +3,7 @@ title: How to add https and multiple apps on a vps using Docker
 description: Tutorial about adding https and multiple apps on a vps using Docker in a simple and easy way.
 slug: how-to-add-https-and-apps-on-vps-with-docker
 date: '2017-05-29'
+layout: code
 category:
   - code
 picto: fa-code
@@ -13,138 +14,127 @@ tags:
   - Let's Encrypt
 ---
 
-```js exec
-import PostHeader from 'src/components/post/PostHeader.svelte';
-import PostContent from 'src/components/post/PostContent.svelte';
+*It's been a long time since my last post, but I had my first child (Coline) less than a week after it.
+I first thought I'd be able to manage both, but it's clearly not possible or if you guys have tips just let me know !*
+
+Everybody now knows Docker and how awesome it is, so I won't go into much details about it (as it's not the purpose of this post) but I will describe how I am using it to add https and multiple apps on a basic vps.
+
+> This example is based on how I am running this website and my parent's one on the same vps.
+
+## Requirements
+
+First of all you need :
+
+- A [Vps](https://www.kimsufi.com/en/vps-ssd.xml)
+- [Docker](https://store.docker.com/editions/community/docker-ce-server-ubuntu)
+- Whathever you want as websites or apps that use docker. In our example we will use two images :
+  - An Express hello-world in a node:alpine based image.
+  - A React hello-world (using create-react-app) in a nginx:alpine based image.
+
+## Installing / Getting started
+
+This post will assume that you know how to init and use a server, so once you have Docker up and running on your server, don't forget to add it to your user group to avoid doing ```sudo``` each time you want to use a docker command :
+
+```bash
+sudo usermod -aG docker $USER
 ```
 
-<PostHeader data={_metadata} />
+Now you can pull the images you want or simply let Docker pull those present in your `docker-compose.yml` if they are not already in your server.
 
-<PostContent>
+> I mostly use alpine based images because they are very lightweight !!
 
-  *It's been a long time since my last post, but I had my first child (Coline) less than a week after it.
-  I first thought I'd be able to manage both, but it's clearly not possible or if you guys have tips just let me know !*
+So now you can set up your `docker-compose.yml` as the one bellow :
 
-  Everybody now knows Docker and how awesome it is, so I won't go into much details about it (as it's not the purpose of this post) but I will describe how I am using it to add https and multiple apps on a basic vps.
+```yaml
+version: '2'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy:alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /srv/docker/nginx/certs:/etc/nginx/certs:ro
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 
-  > This example is based on how I am running this website and my parent's one on the same vps.
+  nginx-proxy-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-proxy-companion
+    restart: unless-stopped
+    volumes:
+      - /srv/docker/nginx/certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock
+    volumes_from:
+      - nginx-proxy
 
-  ## Requirements
+  react-helloworld:
+    image: rcauquil/react-helloworld
+    container_name: react-helloworld
+    restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=yourhostname.tld
 
-  First of all you need :
+  express-helloworld:
+    image: rcauquil/express-helloworld
+    container_name: express-helloworld
+    restart: unless-stopped
+    ports:
+      - 3000
+    environment:
+      - VIRTUAL_HOST=yourhostname.tld
+      - LETSENCRYPT_HOST=yourhostname.tld
+      - LETSENCRYPT_EMAIL=your@email.tld
+```
 
-  - A [Vps](https://www.kimsufi.com/en/vps-ssd.xml)
-  - [Docker](https://store.docker.com/editions/community/docker-ce-server-ubuntu)
-  - Whathever you want as websites or apps that use docker. In our example we will use two images :
-    - An Express hello-world in a node:alpine based image.
-    - A React hello-world (using create-react-app) in a nginx:alpine based image.
+Nothing fancy here, we are simply following both usage of **nginx-proxy** and **nginx-proxy-companion** unless we are adding a **restart: unless-stopped** policy to our containers.
 
-  ## Installing / Getting started
+### react-helloworld
 
-  This post will assume that you know how to init and use a server, so once you have Docker up and running on your server, don't forget to add it to your user group to avoid doing ```sudo``` each time you want to use a docker command :
+This part only contains the **VIRTUAL_HOST** env from nginx-proxy, so our app will only have http support.
 
-  ```bash
-  sudo usermod -aG docker $USER
-  ```
+### express-helloworld
 
-  Now you can pull the images you want or simply let Docker pull those present in your `docker-compose.yml` if they are not already in your server.
+In this part we are adding two more env **LETSENCRYPT_HOST** and **LETSENCRYPT_EMAIL** to make use of Let's Encrypt and have https support to our app.
 
-  > I mostly use alpine based images because they are very lightweight !!
+nginx-proxy-companion will take care of the automatic creation/renewal of Let's Encrypt certificates and support creation of Multi-Domain (SAN) Certificates.
 
-  So now you can set up your `docker-compose.yml` as the one bellow :
+I have to specify which port I want my container to expose, **3000** in this example (default one in express) because I did not specified it in the Dockerfile while building the image.
 
-  ```yaml
-  version: '2'
-  services:
-    nginx-proxy:
-      image: jwilder/nginx-proxy:alpine
-      container_name: nginx-proxy
-      restart: unless-stopped
-      ports:
-        - 80:80
-        - 443:443
-      volumes:
-        - /srv/docker/nginx/certs:/etc/nginx/certs:ro
-        - /etc/nginx/vhost.d
-        - /usr/share/nginx/html
-        - /var/run/docker.sock:/tmp/docker.sock:ro
+> I didn't have to do it in the previous part because the nginx image I am using to serve my react app, exposes on port 80.
 
-    nginx-proxy-companion:
-      image: jrcs/letsencrypt-nginx-proxy-companion
-      container_name: nginx-proxy-companion
-      restart: unless-stopped
-      volumes:
-        - /srv/docker/nginx/certs:/etc/nginx/certs:rw
-        - /var/run/docker.sock:/var/run/docker.sock
-      volumes_from:
-        - nginx-proxy
+## Publishing
 
-    react-helloworld:
-      image: rcauquil/react-helloworld
-      container_name: react-helloworld
-      restart: unless-stopped
-      environment:
-        - VIRTUAL_HOST=yourhostname.tld
+Now you can simply start all your containers :
 
-    express-helloworld:
-      image: rcauquil/express-helloworld
-      container_name: express-helloworld
-      restart: unless-stopped
-      ports:
-        - 3000
-      environment:
-        - VIRTUAL_HOST=yourhostname.tld
-        - LETSENCRYPT_HOST=yourhostname.tld
-        - LETSENCRYPT_EMAIL=your@email.tld
-  ```
-
-  Nothing fancy here, we are simply following both usage of **nginx-proxy** and **nginx-proxy-companion** unless we are adding a **restart: unless-stopped** policy to our containers.
-
-  ### react-helloworld
-
-  This part only contains the **VIRTUAL_HOST** env from nginx-proxy, so our app will only have http support.
-
-  ### express-helloworld
-
-  In this part we are adding two more env **LETSENCRYPT_HOST** and **LETSENCRYPT_EMAIL** to make use of Let's Encrypt and have https support to our app.
-
-  nginx-proxy-companion will take care of the automatic creation/renewal of Let's Encrypt certificates and support creation of Multi-Domain (SAN) Certificates.
-
-  I have to specify which port I want my container to expose, **3000** in this example (default one in express) because I did not specified it in the Dockerfile while building the image.
-
-  > I didn't have to do it in the previous part because the nginx image I am using to serve my react app, exposes on port 80.
-
-  ## Publishing
-
-  Now you can simply start all your containers :
-
-  ```bash
-  docker-compose up -d
-  ```
+```bash
+docker-compose up -d
+```
 
 
-  If you want to stop a specific container to update it without having to shut down all your running containers :
+If you want to stop a specific container to update it without having to shut down all your running containers :
 
-  ```bash
-  docker-compose stop express-helloworld
-  ```
+```bash
+docker-compose stop express-helloworld
+```
 
-  Then to run it again :
+Then to run it again :
 
-  ```bash
-  docker-compose up -d express-helloworld
-  ```
+```bash
+docker-compose up -d express-helloworld
+```
 
-  You can add the **--force-recreate** flag to clear the cache and avoid useless headaches.
+You can add the **--force-recreate** flag to clear the cache and avoid useless headaches.
 
-  If you want to stop all of your running containers :
+If you want to stop all of your running containers :
 
-  ```bash
-  docker-compose down
-  ```
+```bash
+docker-compose down
+```
 
-  ## Conclusion
+## Conclusion
 
-  This is a very basic example of how to use nginx-proxy and nginx-proxy-companion to run and easily add https on your apps, but I hope it will help some of you !
-
-</PostContent>
+This is a very basic example of how to use nginx-proxy and nginx-proxy-companion to run and easily add https on your apps, but I hope it will help some of you !

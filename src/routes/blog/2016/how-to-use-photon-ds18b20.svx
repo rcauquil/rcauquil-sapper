@@ -13,111 +13,100 @@ tags:
   - Iot
 ---
 
-```js exec
-import PostHeader from 'src/components/post/PostHeader.svelte';
-import PostContent from 'src/components/post/PostContent.svelte';
-```
+*I am currently living in reunion island (between Madagascar and Mauritius) with my wife and a little rabbit! As the climate is tropical (very warm and humid) I wanted to be able to know my home's temperature from my office using one of my [Photon](https://www.particle.io/) and a [Dallas ds18b20](https://docs.particle.io/assets/datasheets/makerkit/DS18B20.pdf) temperature sensor.*
 
-<PostHeader data={_metadata} />
+## Requirements
 
-<PostContent>
+First of all you need :
 
-  *I am currently living in reunion island (between Madagascar and Mauritius) with my wife and a little rabbit! As the climate is tropical (very warm and humid) I wanted to be able to know my home's temperature from my office using one of my [Photon](https://www.particle.io/) and a [Dallas ds18b20](https://docs.particle.io/assets/datasheets/makerkit/DS18B20.pdf) temperature sensor.*
+- A Photon
+- A bread board
+- A 4.7kOhm resistor (in my example I use two 10kOhm in parallel, so ~5kOhm)
+- A Dallas ds18b20 temperature sensor
+- Some jumper wires
 
-  ## Requirements
+## Schematics
 
-  First of all you need :
-
-  - A Photon
-  - A bread board
-  - A 4.7kOhm resistor (in my example I use two 10kOhm in parallel, so ~5kOhm)
-  - A Dallas ds18b20 temperature sensor
-  - Some jumper wires
-
-  ## Schematics
-
-  ![fritzing schematics](blog/2016-03-13-fritzing.jpg "Fritzing Schematics")
+![fritzing schematics](blog/2016-03-13-fritzing.jpg "Fritzing Schematics")
 
 
-  ## Firmware
+## Firmware
 
 
-  ```c
-  // This #include statement was automatically added by the Particle IDE.
-  #include "application.h"
-  #include "OneWire/OneWire.h"
-  #include "spark-dallas-temperature/spark-dallas-temperature.h"
+```c
+// This #include statement was automatically added by the Particle IDE.
+#include "application.h"
+#include "OneWire/OneWire.h"
+#include "spark-dallas-temperature/spark-dallas-temperature.h"
 
+// ---------------------
+// TEMPERATURE
+// Init the tempC variable
+// ---------------------
+double tempC = 0;
+
+// ---------------------
+// ONEWIRE + DALLAS
+// ---------------------
+// Set the oneWire bus to pin 4
+#define ONE_WIRE_BUS 4
+// Setup a oneWire instance to communicate with any OneWire devices
+OneWire oneWire(ONE_WIRE_BUS);
+// Pass the oneWire reference to Dallas Temperature.
+DallasTemperature sensors(&oneWire);
+
+void setup() {
+  // VARS
+  // ---------------------
+  // Init the tempC variable with the Particle method
+  Particle.variable("tempC", &tempC, DOUBLE);
+
+  // INIT Serial for terminal checking
+  // ---------------------
+  Serial.begin(9600);
+
+  // INIT Sensors
+  // ---------------------
+  // Start up the library
+  Serial.println("Dallas Temperature IC Control Library");
+  sensors.begin();
+}
+
+void loop() {
   // ---------------------
   // TEMPERATURE
-  // Init the tempC variable
   // ---------------------
-  double tempC = 0;
+  // call sensors.requestTemperatures() to issue a global temperature
+  // request to all devices on the bus
+  Serial.println(" Requesting temperatures...");
+
+  // Send the command to get temperatures
+  sensors.requestTemperatures();
+  Serial.println("DONE");
+
+  Serial.println("Temperature for Device 1 is: ");
+  tempC = sensors.getTempCByIndex(0);
+  Serial.println(tempC);
+
+  // Why "byIndex"?
+  // You can have more than one IC on the same bus.
+  // 0 refers to the first IC on the wire
 
   // ---------------------
-  // ONEWIRE + DALLAS
+  // DELAY
   // ---------------------
-  // Set the oneWire bus to pin 4
-  #define ONE_WIRE_BUS 4
-  // Setup a oneWire instance to communicate with any OneWire devices
-  OneWire oneWire(ONE_WIRE_BUS);
-  // Pass the oneWire reference to Dallas Temperature.
-  DallasTemperature sensors(&oneWire);
+  delay(10000);
+}
+```
 
-  void setup() {
-    // VARS
-    // ---------------------
-    // Init the tempC variable with the Particle method
-    Particle.variable("tempC", &tempC, DOUBLE);
+## Reading the temperatures
 
-    // INIT Serial for terminal checking
-    // ---------------------
-    Serial.begin(9600);
+You can now have access to your home's temperature with the Particle cloud api :
 
-    // INIT Sensors
-    // ---------------------
-    // Start up the library
-    Serial.println("Dallas Temperature IC Control Library");
-    sensors.begin();
-  }
+```bash
+http://api.particle.io/v1/devices/YOUR_PHOTON_ID/tempC?access_token=YOUR_ACCESS_TOKEN
+```
 
-  void loop() {
-    // ---------------------
-    // TEMPERATURE
-    // ---------------------
-    // call sensors.requestTemperatures() to issue a global temperature
-    // request to all devices on the bus
-    Serial.println(" Requesting temperatures...");
+## Conclusion
 
-    // Send the command to get temperatures
-    sensors.requestTemperatures();
-    Serial.println("DONE");
-
-    Serial.println("Temperature for Device 1 is: ");
-    tempC = sensors.getTempCByIndex(0);
-    Serial.println(tempC);
-
-    // Why "byIndex"?
-    // You can have more than one IC on the same bus.
-    // 0 refers to the first IC on the wire
-
-    // ---------------------
-    // DELAY
-    // ---------------------
-    delay(10000);
-  }
-  ```
-
-  ## Reading the temperatures
-
-  You can now have access to your home's temperature with the Particle cloud api :
-
-  ```bash
-  http://api.particle.io/v1/devices/YOUR_PHOTON_ID/tempC?access_token=YOUR_ACCESS_TOKEN
-  ```
-
-  ## Conclusion
-
-  I admit this setup is not doing much on its own, but I hope it will help some of you to getting started with your Photon and to have fun doing this.
-
-</PostContent>
+I admit this setup is not doing much on its own, but I hope it will help some of you to getting started with your Photon and to have fun doing this.

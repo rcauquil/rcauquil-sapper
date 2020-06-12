@@ -2,6 +2,8 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300,600,400);
 @import url(http://fonts.googleapis.com/css?family=Prata);
 
+/* purgecss start ignore */
+
 @tailwind base;
 
 html, body {
@@ -23,7 +25,7 @@ h1, h2, h3, h4, h5, h6, a {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('background.jpg') no-repeat center center #000d2f;
+  background: url('../background.jpg') no-repeat center center #000d2f;
   background-size: cover;
 }
 
@@ -37,4 +39,7 @@ strong {
 }
 
 @tailwind components;
+
+/* purgecss end ignore */
+
 @tailwind utilities;

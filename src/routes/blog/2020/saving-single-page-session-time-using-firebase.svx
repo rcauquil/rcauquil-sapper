@@ -3,6 +3,7 @@ title: Saving single page session time using the firebase stack
 description: Analytics can't get the session time of a 100% bounce rate (single page), so we'll see how to implement a simple time tracker using the firebase stack.
 slug: saving-single-page-session-time-using-firebase
 date: '2020-01-28'
+layout: code
 category:
   - code
 picto: fa-code
@@ -12,114 +13,103 @@ tags:
   - Analytics
 ---
 
-```js exec
-import PostHeader from 'src/components/post/PostHeader.svelte';
-import PostContent from 'src/components/post/PostContent.svelte';
+Recently I launched a simple [Print on Demand boutique](https://9mois2toi.fr) using sapper.  
+I started an adwords campaign and everything went well *(ads were shown and clicked)*.   
+
+As it is a single page with the payment form in it, my overall bounce rate is ~100% which is perfectly understandable *(people not interested yet, look at the page and leave)*.
+
+Because of that, the average session time is 00:00:00 ! According to [google doc](https://support.google.com/analytics/answer/1009409?hl=en), analytics **can't track** time in this case and thus sets it to 0, which is annoying to get this insight;
+
+## 🔥 Firebase to the rescue
+
+I was not a huge fan before, but lets be honest the stack is awesome and very convenient to build things quick. As a result I am using almost all of the stack here for:
+
+* **Host**: hosting the static boutique.
+* **Auth**: getting anonymous user and add better security rules *(to protect their data)*.
+* **RealtimeDB**: storing user's form data.
+* **Storage**: storing the user's picture.
+* **Functions**: automating processes.
+
+### Firebase Auth
+
+With firebase Auth you can easily add Google, Facebook, Github, email/password etc.. but you can also use **Anonymous signin** which is neat to store data and to associate it to a real account later. But in my case I am using it to add stronger security rules to protects my clients data.
+
+> For the rest of this article I will assume you know how to settup firebase, however feel free to contact me on [linkedin](https://www.linkedin.com/in/romain-cauquil-b642aa40/).
+
+#### Database structure
+
+For my needs I wanted something very simple just to grasp an overall idea of time spent per user and structured the analytics db this way:
+
+* analytics
+  * `<currentDay>` *(YYYYMMDD)*
+    * `<userId>` : \<sessionTime\> *(hh:mm:ss)*
+
+#### Anonymous Auth
+
+Here we are initializing the firebase instance, requesting an anonymous user and listening to auth state change, then assigning the result to our handler.
+
+```javascript
+const firebaseApp = firebase.initializeApp(process.env.firebase);
+firebaseApp.auth().signInAnonymously();
+firebaseApp.auth().onAuthStateChanged(u => {
+  sessionTimeHandler(u);
+});
 ```
 
-<PostHeader data={_metadata} />
+#### How do we know when a user leaves the page?
 
-<PostContent>
+Firebase is a RealtimeDB and keeps a connection between the client and the database. Therefore they provide us an handy function called `onDisconnect`.
 
-  Recently I launched a simple [Print on Demand boutique](https://9mois2toi.fr) using sapper.  
-  I started an adwords campaign and everything went well *(ads were shown and clicked)*.   
-  
-  As it is a single page with the payment form in it, my overall bounce rate is ~100% which is perfectly understandable *(people not interested yet, look at the page and leave)*.
- 
-  Because of that, the average session time is 00:00:00 ! According to [google doc](https://support.google.com/analytics/answer/1009409?hl=en), analytics **can't track** time in this case and thus sets it to 0, which is annoying to get this insight;
+> The onDisconnect class allows you to write or clear data when your client disconnects from the Database server. These updates occur whether your client disconnects cleanly or not, so you can rely on them to clean up data even if a connection is dropped or a client crashes.
 
-  ## 🔥 Firebase to the rescue
+We are going to use it to store the **starting** and **ending** session timestamp. However as `onDisconnect` can't get data from the client when the connection has dropped we need to call `firebase.database.ServerValue.TIMESTAMP` for the ending timestamp *(which tells firebase to use its server timestamp)*.
 
-  I was not a huge fan before, but lets be honest the stack is awesome and very convenient to build things quick. As a result I am using almost all of the stack here for:
+In this case I am using `set` to overide previous data *(but you can do whatever you want)*.
 
-  * **Host**: hosting the static boutique.
-  * **Auth**: getting anonymous user and add better security rules *(to protect their data)*.
-  * **RealtimeDB**: storing user's form data.
-  * **Storage**: storing the user's picture.
-  * **Functions**: automating processes.
-
-  ### Firebase Auth
-
-  With firebase Auth you can easily add Google, Facebook, Github, email/password etc.. but you can also use **Anonymous signin** which is neat to store data and to associate it to a real account later. But in my case I am using it to add stronger security rules to protects my clients data.
-
-  > For the rest of this article I will assume you know how to settup firebase, however feel free to contact me on [linkedin](https://www.linkedin.com/in/romain-cauquil-b642aa40/).
-
-  #### Database structure
-
-  For my needs I wanted something very simple just to grasp an overall idea of time spent per user and structured the analytics db this way:
-
-  * analytics
-    * \<currentDay\> *(YYYYMMDD)*
-      * \<userId\> : \<sessionTime\> *(hh:mm:ss)*
-
-  #### Anonymous Auth
-
-  Here we are initializing the firebase instance, requesting an anonymous user and listening to auth state change, then assigning the result to our handler.
-
-  ```javascript
-  firebaseApp = firebase.initializeApp(process.env.firebase);
-  firebaseApp.auth().signInAnonymously();
-  firebaseApp.auth().onAuthStateChanged(u => {
-    sessionTimeHandler(u);
+```javascript
+function sessionTimeHandler(u) {
+  // If no user do not proceed
+  if (!u) { return; }
+  // Format the current time to : YYYYMMDD
+  const currentDay = new Date().toISOString().slice(0,10).split('-').join(''); 
+  // Reference to our analytics database
+  const analyticsRef = $firebaseApp.database().ref(`analytics/${currentDay}/${u.uid}`);
+  // On disconnect
+  analyticsRef.onDisconnect().set({
+    s: Date.now(),
+    e: firebase.database.ServerValue.TIMESTAMP
   });
-  ```
+}
+```
 
-  #### How do we know when a user leaves the page?
+> You can attach `onDisconnect` to any ref, so use it on the one you want to make changes.
 
-  Firebase is a RealtimeDB and keeps a connection between the client and the database. Therefore they provide us an handy function called `onDisconnect`.
+#### Post processing using firebase functions
 
-  > The onDisconnect class allows you to write or clear data when your client disconnects from the Database server. These updates occur whether your client disconnects cleanly or not, so you can rely on them to clean up data even if a connection is dropped or a client crashes.
+Now that we are able to store *starting* and *ending* session timestamp in our database and our user left us, we need to process this data to a more human readable format.
 
-  We are going to use it to store the **starting** and **ending** session timestamp. However as `onDisconnect` can't get data from the client when the connection has dropped we need to call `firebase.database.ServerValue.TIMESTAMP` for the ending timestamp *(which tells firebase to use its server timestamp)*.
+Good news! Firebase functions are perfect for this task and offer us with plenty of triggers capabilities. In our case we are going to use the [Realtime Database Triggers](https://firebase.google.com/docs/functions/database-events).
 
-  In this case I am using `set` to overide previous data *(but you can do whatever you want)*.
+```javascript
+exports.sessionTime = functions
+  .region('europe-west1')
+  .database.ref('/analytics/{time}/{userId}')
+  // Here we are listening on onWrite (which triggers when data is created, updated, or deleted)
+  .onWrite((change, context) => {
+    // If no after data (delete event) stop
+    if (!change.after.exists()) { return null; }
+    // Data
+    const data = change.after.val();
+    // If the properties s and e are NOT present (after it has been computed to hh:mm:ss) stop
+    if (!data.hasOwnProperty('s') && !data.hasOwnProperty('e')) { return null; }
+    // If properties s and e are present compute the timestamp to hh:mm:ss and set the result
+    // (which will trigger again this function)
+    return change.after.ref.set(
+      toHHMMSS(Math.round((data.e - data.s)/1000)) // format the timestamp to hh:mm:ss
+    );
+  });
+```
 
-  ```javascript
-  function sessionTimeHandler(u) {
-    // If no user do not proceed
-    if (!u) { return; }
-    // Format the current time to : YYYYMMDD
-    const currentDay = new Date().toISOString().slice(0,10).split('-').join(''); 
-    // Reference to our analytics database
-    const analyticsRef = $firebaseApp.database().ref(`analytics/${currentDay}/${u.uid}`);
-    // On disconnect
-    analyticsRef.onDisconnect().set({
-      s: Date.now(),
-      e: firebase.database.ServerValue.TIMESTAMP
-    });
-  }
-  ```
+## Conclusion
 
-  > You can attach `onDisconnect` to any ref, so use it on the one you want to make changes.
-
-  #### Post processing using firebase functions
-
-  Now that we are able to store *starting* and *ending* session timestamp in our database and our user left us, we need to process this data to a more human readable format.
-
-  Good news! Firebase functions are perfect for this task and offer us with plenty of triggers capabilities. In our case we are going to use the [Realtime Database Triggers](https://firebase.google.com/docs/functions/database-events).
-
-  ```javascript
-  exports.sessionTime = functions
-    .region('europe-west1')
-    .database.ref('/analytics/{time}/{userId}')
-    // Here we are listening on onWrite (which triggers when data is created, updated, or deleted)
-    .onWrite((change, context) => {
-      // If no after data (delete event) stop
-      if (!change.after.exists()) { return null; }
-      // Data
-      const data = change.after.val();
-      // If the properties s and e are NOT present (after it has been computed to hh:mm:ss) stop
-      if (!data.hasOwnProperty('s') && !data.hasOwnProperty('e')) { return null; }
-      // If properties s and e are present compute the timestamp to hh:mm:ss and set the result
-      // (which will trigger again this function)
-      return change.after.ref.set(
-        toHHMMSS(Math.round((data.e - data.s)/1000)) // format the timestamp to hh:mm:ss
-      );
-    });
-  ```
-
-  ## Conclusion
-
-  When you have a very poor average session time in analytics, don't forget to check your bounce rate. If this one is close to 100%, it's normal and your ads budget is probably not killed by bots. However you can implement very simple strategies using firebase to get a better insight of how your users behave with your site.
-
-</PostContent>
+When you have a very poor average session time in analytics, don't forget to check your bounce rate. If this one is close to 100%, it's normal and your ads budget is probably not killed by bots. However you can implement very simple strategies using firebase to get a better insight of how your users behave with your site.

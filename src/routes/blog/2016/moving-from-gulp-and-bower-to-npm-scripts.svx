@@ -3,6 +3,7 @@ title: Moving from gulp and bower to npm scripts
 description: Tutorial and thoughts about moving from gulp and bower to only npm scripts for managing and building your projects.
 slug: moving-from-gulp-and-bower-to-npm-scripts
 date: '2016-02-21'
+layout: code
 category:
   - code
 picto: fa-code
@@ -12,113 +13,101 @@ tags:
   - Npm
 ---
 
+*I was bored having to learn grunt then gulp to automate all of my tasks, then having to deal with another packaging manager for the client (bower) beside npm. Taking advice from friends and others I started to move towards that workflow, now I'm really relieved with the decision !*
 
-```js exec
-import PostHeader from 'src/components/post/PostHeader.svelte';
-import PostContent from 'src/components/post/PostContent.svelte';
+## Only one package manager
+
+Npm has plenty of ways to handle packages. You can install a .tgz or .zip, you can also install from GitHub, but be sure that the repository has a package.json inside otherwise npm won't install because it won't understand the repo as a package itself.
+
+You can also separate your packages purpose in **dependencies** and **devDependencies**.
+
+Here is a little example for installing a package from github with a specific tag name inside the package.json "dependencies" :
+
+```bash
+npm install --save github:PrismJS/prism#v1.4.1
 ```
 
-<PostHeader data={_metadata} />
+Another one for installing an npm package to "devDependencies" :
 
-<PostContent>
+```bash
+npm install --save-dev eslint
+```
 
-  *I was bored having to learn grunt then gulp to automate all of my tasks, then having to deal with another packaging manager for the client (bower) beside npm. Taking advice from friends and others I started to move towards that workflow, now I'm really relieved with the decision !*
-
-  ## Only one package manager
-
-  Npm has plenty of ways to handle packages. You can install a .tgz or .zip, you can also install from GitHub, but be sure that the repository has a package.json inside otherwise npm won't install because it won't understand the repo as a package itself.
-
-  You can also separate your packages purpose in **dependencies** and **devDependencies**.
-
-  Here is a little example for installing a package from github with a specific tag name inside the package.json "dependencies" :
-
-  ```bash
-  npm install --save github:PrismJS/prism#v1.4.1
-  ```
-
-  Another one for installing an npm package to "devDependencies" :
-
-  ```bash
-  npm install --save-dev eslint
-  ```
-
-  *For more informations please go see [install a package](https://docs.npmjs.com/cli/install)*
+*For more informations please go see [install a package](https://docs.npmjs.com/cli/install)*
 
 
-  ## Npm scripts
+## Npm scripts
 
-  Npm scripts let you add tasks based on your OS command-line, npm packages or any scripts ! For example instead of using rimraf with gulp to delete files you can just add the following to your package.json's scripts:
+Npm scripts let you add tasks based on your OS command-line, npm packages or any scripts ! For example instead of using rimraf with gulp to delete files you can just add the following to your package.json's scripts:
 
-  ```json
-  "scripts": {
-    "clean": "rm -rf /path"
-  }
-  ```
+```json
+"scripts": {
+  "clean": "rm -rf /path"
+}
+```
 
-  and then running it :
+and then running it :
 
-  ```bash
-  npm run clean
-  ```
-
-
-  ### Grouping tasks
-
-  You can group tasks for more convenience, so you can decompose your scripts into small, single responsibility and well-named task.
-
-  ```json
-  "scripts": {
-    "lesslint": "lessc --lint ./app/_sources/less/main.less",
-    "lessbuild": "lessc --source-map ./app/_sources/less/main.less --clean-css ./app/assets/css/main.min.css",
-    "build:less": "npm run lesslint && npm run lessbuild"
-  }
-  ```
-
-  So now if you want to run both *lesslint* and *lessbuild* you only have to :
-
-  ```bash
-  npm run build:lessbuild
-  ```
+```bash
+npm run clean
+```
 
 
-  ### Recursivity
+### Grouping tasks
 
-  If the package you're using doesn’t have recursive or glob capabilities you can use simple cli commands to achieve it. Here is an example of using **htmlminifier** with a bash *for in* loop associated to *find* for the recursive part.
+You can group tasks for more convenience, so you can decompose your scripts into small, single responsibility and well-named task.
 
-  ```json
-  "scripts": {
-    "htmlminifier": "for f in $(find _site -name '*.html'); do html-minifier --collapse-whitespace --remove-comments --remove-attribute-quotes --remove-redundant-attributes --remove-empty-attributes -o $f $f; echo $f; done",
-  }
-  ```
+```json
+"scripts": {
+  "lesslint": "lessc --lint ./app/_sources/less/main.less",
+  "lessbuild": "lessc --source-map ./app/_sources/less/main.less --clean-css ./app/assets/css/main.min.css",
+  "build:less": "npm run lesslint && npm run lessbuild"
+}
+```
 
+So now if you want to run both *lesslint* and *lessbuild* you only have to :
 
-  ### Watch changes
-
-  One of the great things about task runners is the ability to watch changes and then to run tasks if something happened in your directories. You can easily achieve this by using the package [onchange](https://www.npmjs.com/package/onchange).
-
-  ```json
-  "scripts": {
-    "watch:less": "onchange './app/_sources/less/**/*.less' -- npm run build:less",
-    "watch:js": "onchange './app/_sources/js/*.js' -- npm run build:mainjs"
-  }
-  ```
-
-  You probably have noticed that each npm script waits for its predecessor to finish before starting. In our case we have *watch* scripts, and by definition they will never end because they are permanently looking for a change. Because of that, grouping both task in a single one won't work.
-  A simple workaround is to use the following package :  [parallelshell](https://www.npmjs.com/package/parallelshell). It will run our tasks in parallel and it will share the same stdout/stderr.
-
-  ```json
-  "scripts": {
-    "watch:less": "onchange './app/_sources/less/**/*.less' -- npm run build:less",
-    "watch:js": "onchange './app/_sources/js/*.js' -- npm run build:mainjs",
-    "watch:ALL": "parallelshell 'npm run watch:less' 'npm run watch:js'"
-  }
-  ```
+```bash
+npm run build:lessbuild
+```
 
 
-  ## Conclusion
+### Recursivity
 
-  You can achieve all of your gulpfile tasks and managing both of your client and backend packages only by using your  package.json, it's very easy and you will not be bound to plugin maintainers !
-  It's also a big relief to have to deal with a single file rather than n+x or to have to learn all of the abstractions that task runners or plugins add on top of packages.
-  Hope it will help you to move toward that workflow !
+If the package you're using doesn’t have recursive or glob capabilities you can use simple cli commands to achieve it. Here is an example of using **htmlminifier** with a bash *for in* loop associated to *find* for the recursive part.
 
-</PostContent>
+```json
+"scripts": {
+  "htmlminifier": "for f in $(find _site -name '*.html'); do html-minifier --collapse-whitespace --remove-comments --remove-attribute-quotes --remove-redundant-attributes --remove-empty-attributes -o $f $f; echo $f; done",
+}
+```
+
+
+### Watch changes
+
+One of the great things about task runners is the ability to watch changes and then to run tasks if something happened in your directories. You can easily achieve this by using the package [onchange](https://www.npmjs.com/package/onchange).
+
+```json
+"scripts": {
+  "watch:less": "onchange './app/_sources/less/**/*.less' -- npm run build:less",
+  "watch:js": "onchange './app/_sources/js/*.js' -- npm run build:mainjs"
+}
+```
+
+You probably have noticed that each npm script waits for its predecessor to finish before starting. In our case we have *watch* scripts, and by definition they will never end because they are permanently looking for a change. Because of that, grouping both task in a single one won't work.
+A simple workaround is to use the following package :  [parallelshell](https://www.npmjs.com/package/parallelshell). It will run our tasks in parallel and it will share the same stdout/stderr.
+
+```json
+"scripts": {
+  "watch:less": "onchange './app/_sources/less/**/*.less' -- npm run build:less",
+  "watch:js": "onchange './app/_sources/js/*.js' -- npm run build:mainjs",
+  "watch:ALL": "parallelshell 'npm run watch:less' 'npm run watch:js'"
+}
+```
+
+
+## Conclusion
+
+You can achieve all of your gulpfile tasks and managing both of your client and backend packages only by using your  package.json, it's very easy and you will not be bound to plugin maintainers !
+It's also a big relief to have to deal with a single file rather than n+x or to have to learn all of the abstractions that task runners or plugins add on top of packages.
+Hope it will help you to move toward that workflow !

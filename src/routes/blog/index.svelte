@@ -21,7 +21,7 @@
   import { beforeUpdate } from 'svelte';
   import { fly } from 'svelte/transition';
   import SectionTitle from 'src/components/SectionTitle.svelte';
-  import PostItem from 'src/components/post/PostItem.svelte';
+  import PostItem from 'src/components/PostItem.svelte';
 
   export let years;
   export let posts;

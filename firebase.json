@@ -6,7 +6,12 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "redirects": [{
+    "redirects": [
+    {
+      "source": "/code",
+      "destination": "/blog",
+      "type": 301
+    },{
       "source": "/code/2017/06/23/playing-with-pizerow-gpio-using-docker-and-nodejs/",
       "destination": "/blog/2017/how-to-use-pizerow-gpio-with-docker-and-nodejs",
       "type": 301

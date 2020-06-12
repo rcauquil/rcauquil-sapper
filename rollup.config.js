@@ -1,9 +1,10 @@
+import { join } from "path";
 import alias from '@rollup/plugin-alias';
 import replace from '@rollup/plugin-replace';
+import babel from '@rollup/plugin-babel';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import svelte from 'rollup-plugin-svelte';
-import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocessPostcss from 'svelte-preprocess-postcss';
 import config from 'sapper/config/rollup.js';
@@ -34,7 +35,10 @@ const stylePreprocessor = sveltePreprocessPostcss({
 
 // Add mdsvex
 const svxPreprocessor = mdsvex({
-	extension: '.svx'
+  layout: {
+    code: join(__dirname, './src/components/layouts/CodeLayout.svelte'),
+    _: join(__dirname, './src/components/layouts/CodeLayout.svelte')
+  }
 });
 
 // Export
@@ -75,8 +79,8 @@ export default {
       commonjs(),
 
       babel({
+        babelHelpers: 'runtime',
         extensions: ['.js', '.mjs', '.html', '.svelte', '.svx'],
-        runtimeHelpers: true,
         exclude: ['node_modules/@babel/**'],
         presets: [
           ['@babel/preset-env', {
@@ -128,7 +132,7 @@ export default {
           { style: stylePreprocessor }
         ],
         css: css => {
-          css.write(`static/components.css`)
+          css.write(`static/styles/components.css`)
         }
       }),
 
