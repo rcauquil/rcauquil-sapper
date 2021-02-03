@@ -4,7 +4,7 @@
   import { faMapMarker } from '@fortawesome/free-solid-svg-icons';
   
   const { title, description, siteName, url } = process.env.site;
-  const tags = ['IoT', 'Svelte/React', 'PWA', 'Flutter', 'Firebase', 'Docker'];
+  const tags = ['Vue/Svelte/React', 'Nodejs/Express', 'Firebase/Supabase/Mongo', 'PWA', 'Docker'];
 </script>
 
 <style>
