@@ -25,12 +25,15 @@ const appConfig = Object.keys(mergedConf).reduce((o,c) => {
   return o;
 }, {});
 
-const onwarn = (warning, onwarn) => (warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) || onwarn(warning);
+const onwarn = (warning, onwarn) =>
+  (warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
+  (warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) ||
+  onwarn(warning);
 const dedupe = importee => importee === 'svelte' || importee.startsWith('svelte/');
 
 const stylePreprocessor = sveltePreprocessPostcss({
-	configFilePath: '',
-	useConfigFile: true
+  configFilePath: '',
+  useConfigFile: true
 });
 
 // Add mdsvex
@@ -66,8 +69,10 @@ export default {
       }),
 
       svelte({
-        dev,
-        hydratable: true,
+        compilerOptions: {
+          dev,
+          hydratable: true,
+        },
         extensions: ['.svelte', '.svx'],
         preprocess: [
           svxPreprocessor,
@@ -124,16 +129,19 @@ export default {
       }),
 
       svelte({
-        dev,
-        generate: 'ssr',
+        compilerOptions: {
+          dev,
+          generate: 'ssr',
+          css: css => {
+            css.write(`static/styles/components.css`)
+          }
+        },
+        emitCss: false,
         extensions: ['.svelte', '.svx'],
         preprocess: [
           svxPreprocessor,
           { style: stylePreprocessor }
-        ],
-        css: css => {
-          css.write(`static/styles/components.css`)
-        }
+        ]
       }),
 
       commonjs()
