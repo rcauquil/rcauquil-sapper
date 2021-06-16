@@ -33,7 +33,7 @@
     "mdsvex": "^0.8.9",
     "npm-run-all": "^4.1.5",
     "polka": "^0.5.2",
-    "postcss": "^7.0.35",
+    "postcss": "^7.0.36",
     "postcss-cli": "^7.1.2",
     "postcss-import": "^12.0.1",
     "postcss-purgecss": "^2.0.3",
